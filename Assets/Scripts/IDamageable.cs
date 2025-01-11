@@ -1,4 +1,4 @@
 public interface IDamageable
 {
-    public virtual void TakeDamage(int damage) { }
+    public abstract void TakeDamage(int damage);
 }

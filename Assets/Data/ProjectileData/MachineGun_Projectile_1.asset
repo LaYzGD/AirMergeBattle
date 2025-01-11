@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MachineGun_Projectile_1
   m_EditorClassIdentifier: 
   <MovementSpeed>k__BackingField: 15
-  <LifeTime>k__BackingField: 1.5
+  <LifeTime>k__BackingField: 3
   <IsAutoAiming>k__BackingField: 0
   <ExplosionRadius>k__BackingField: 3
   <Sprite>k__BackingField: {fileID: -936329972801521658, guid: 48b335cc1808c624897bd37824c00a7f, type: 3}

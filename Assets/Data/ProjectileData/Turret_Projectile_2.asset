@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Turret_Projectile_2
   m_EditorClassIdentifier: 
   <MovementSpeed>k__BackingField: 20
-  <LifeTime>k__BackingField: 1
+  <LifeTime>k__BackingField: 2
   <IsAutoAiming>k__BackingField: 0
   <ExplosionRadius>k__BackingField: 0
   <Sprite>k__BackingField: {fileID: 1617787679272142529, guid: 48b335cc1808c624897bd37824c00a7f, type: 3}

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34959816aecb7b64c98364af78841815, type: 3}
   m_Name: RocketLauncher_Projectile_2
   m_EditorClassIdentifier: 
-  <MovementSpeed>k__BackingField: 15
-  <LifeTime>k__BackingField: 1.5
+  <MovementSpeed>k__BackingField: 8
+  <LifeTime>k__BackingField: 3
   <IsAutoAiming>k__BackingField: 1
   <ExplosionRadius>k__BackingField: 3
   <Sprite>k__BackingField: {fileID: -82509775303020367, guid: 48b335cc1808c624897bd37824c00a7f, type: 3}

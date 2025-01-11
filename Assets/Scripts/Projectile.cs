@@ -4,7 +4,6 @@ using UnityEngine;
 using Zenject;
 
 [RequireComponent(typeof(ZenAutoInjecter))]
-[RequireComponent(typeof (Collider2D))]
 [RequireComponent(typeof (Rigidbody2D))]
 [RequireComponent(typeof (SpriteRenderer))]
 public class Projectile : MonoBehaviour
@@ -49,8 +48,8 @@ public class Projectile : MonoBehaviour
 
     public void StartMovement()
     {
-        Invoke(nameof(Destroy), _lifeTime);
-        
+        StartCoroutine(CheckLifeTime());
+
         if (_isAutoAiming)
         {
             _target = _playerBase.GetClosestEnemy();
@@ -78,13 +77,26 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    private IEnumerator FollowTarget()
+    private IEnumerator CheckLifeTime()
     {
-        while (true)
+        while (_lifeTime > 0)
         {
-            _rigidBody2D.position = Vector2.MoveTowards(_rigidBody2D.position, _target.position, _movementSpeed * Time.fixedDeltaTime);
+            _lifeTime -= Time.deltaTime;
             yield return null;
         }
+
+        Destroy();
+    }
+
+    private IEnumerator FollowTarget()
+    {
+        while (_target != null)
+        {
+            _rigidBody2D.position = Vector2.MoveTowards(_rigidBody2D.position, _target.position, _movementSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        Destroy();
     }
 
     private void Destroy()

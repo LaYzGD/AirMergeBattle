@@ -16,6 +16,7 @@ public class ProjectilePool : MonoBehaviour
     {
         var projectile = _pool.Get();
         projectile.SetKillAction(KillAction);
+        projectile.transform.SetParent(transform);
         return projectile;
     }
 
