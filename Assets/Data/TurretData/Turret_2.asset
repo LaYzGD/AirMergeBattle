@@ -14,4 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Sprite>k__BackingField: {fileID: -3199707574113559339, guid: fd8b32c4ed8ed234b808d1bd3477d218, type: 3}
   <NextUpgrade>k__BackingField: {fileID: 11400000, guid: 085bd686cd7945747912d30acf55416a, type: 2}
-  <ShootingSpeed>k__BackingField: 0.5
+  <ProjectileData>k__BackingField: {fileID: 11400000, guid: c210adeaa2a632f459f81ee5bc85c531, type: 2}
+  <DistanceBetweenProjectiles>k__BackingField: 0.4
+  <ShootingDelay>k__BackingField: 0.5
+  <ProjectilesAmount>k__BackingField: 2
+  <Damage>k__BackingField: 1

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Zenject;
 
+[RequireComponent(typeof(ZenAutoInjecter))]
 public class Cell : MonoBehaviour, ICell
 {
     [SerializeField] private Transform _cellItemOrigin;

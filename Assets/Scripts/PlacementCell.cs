@@ -12,6 +12,7 @@ public class PlacementCell : MonoBehaviour, ICell
         _currentItem = item;
         _currentItem.transform.position = _origin.position;
         _currentItem.transform.SetParent(transform);
+        _currentItem.Activate(true);
     }
 
     public void RemoveItem()

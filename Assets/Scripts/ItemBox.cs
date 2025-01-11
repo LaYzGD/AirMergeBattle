@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Zenject;
 
+[RequireComponent(typeof(ZenAutoInjecter))]
 public class ItemBox : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;

@@ -1,9 +1,11 @@
 using UnityEngine;
 using Zenject;
 
+[RequireComponent(typeof(ZenAutoInjecter))]
 public class CellItem : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private ItemShoot _itemShoot;
 
     private MergeGrid _mergeGrid;
     private PlacementGrid _placementGrid;
@@ -31,11 +33,16 @@ public class CellItem : MonoBehaviour
     {
         TurretType = type;
         _spriteRenderer.sprite = TurretType.Sprite;
+        if (_itemShoot != null)
+        {
+            _itemShoot.Init(type);
+        }
     }
 
     private void OnMouseDown()
     {
         _currentCell.RemoveItem();
+        Activate(false);
         transform.SetParent(null);
     }
 
@@ -73,5 +80,21 @@ public class CellItem : MonoBehaviour
 
         _currentCell = mergeValidator.cell;
         _currentCell.PlaceItem(this);
+    }
+
+    public void Activate(bool flag) 
+    {
+        if (_itemShoot == null)
+        {
+            return;
+        }   
+
+        if (flag) 
+        {
+            _itemShoot.StartShooting();
+            return;
+        }
+
+        _itemShoot.StopShooting();
     }
 }

@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: RocketLauncher_4
   m_EditorClassIdentifier: 
   <Sprite>k__BackingField: {fileID: -3280015897603757204, guid: 27439327761dc1f4ca9846e637a0d381, type: 3}
-  <NextUpgrade>k__BackingField: {fileID: 0}
-  <ShootingSpeed>k__BackingField: 0.5
+  <NextUpgrade>k__BackingField: {fileID: 11400000, guid: 08fc2e4e87bc726468791c9a7cd1c3d1, type: 2}
+  <ProjectileData>k__BackingField: {fileID: 11400000, guid: b7c3859714a2af240b4878abf91a55e9, type: 2}
+  <ShootingDelay>k__BackingField: 1
+  <ProjectilesAmount>k__BackingField: 2
+  <Damage>k__BackingField: 20
