@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zenject;
 
 public class ItemBox : MonoBehaviour
 {
@@ -10,11 +11,16 @@ public class ItemBox : MonoBehaviour
     private ItemBoxType _itemBoxType;
     private MergeGrid _mergeGrid;
     private Action<ItemBox> _onDestroy;
-    private Cell _cell;
+    private ICell _cell;
 
-    public void Initialize(MergeGrid grid, Cell cell, ItemBoxType boxType, Action<ItemBox> killAction)
+    [Inject]
+    public void Construct(MergeGrid grid)
     {
         _mergeGrid = grid;
+    }
+
+    public void Initialize(Cell cell, ItemBoxType boxType, Action<ItemBox> killAction)
+    {
         _cell = cell;
         _itemBoxType = boxType;
         _spriteRenderer.sprite = _itemBoxType.Sprite;
@@ -46,7 +52,7 @@ public class ItemBox : MonoBehaviour
         {
             if (randomValue <= cumulativeDropChances[i])
             {
-                _mergeGrid.CreateItem(possibleDrops[i].Type, _cell);
+                _mergeGrid.CreateItem(possibleDrops[i].Type, (Cell)_cell);
                 return;
             }
         }

@@ -1,21 +1,29 @@
 using UnityEngine;
+using Zenject;
 
 public class CellItem : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;
 
     private MergeGrid _mergeGrid;
+    private PlacementGrid _placementGrid;
     private InputReader _inputReader;
 
-    private Cell _currentCell;
+    private ICell _currentCell;
 
     public TurretType TurretType { get; private set; }
 
-    public void Init(Cell cell, MergeGrid mergeGrid, InputReader reader, TurretType type)
+    [Inject]
+    public void Construct(MergeGrid mergeGrid, InputReader reader, PlacementGrid placementGrid)
     {
-        _currentCell = cell;
         _mergeGrid = mergeGrid;
         _inputReader = reader;
+        _placementGrid = placementGrid;
+    }
+
+    public void Init(ICell cell, TurretType type)
+    {
+        _currentCell = cell;
         SetType(type);
     }
 
@@ -38,15 +46,32 @@ public class CellItem : MonoBehaviour
 
     private void OnMouseUp() 
     {
-        var validator = _mergeGrid.ValidateDrop(_inputReader.MousePosition);
+        var placementValidator = _placementGrid.ValidateDrop(_inputReader.MousePosition);
+
+        if (placementValidator.flag)
+        {
+            var cell = placementValidator.cell;
+
+            if (cell.HasItem)
+            {
+                _currentCell.PlaceItem(this);
+                return;
+            }
+
+            cell.PlaceItem(this);
+            _currentCell = cell;
+            return;
+        }
+
+        var mergeValidator = _mergeGrid.ValidateDrop(_inputReader.MousePosition);
         
-        if (!validator.flag || !validator.cell.CanPlaceOrMergeItem(this))
+        if (!mergeValidator.flag || !mergeValidator.cell.CanPlaceItem(this))
         {
             _currentCell.PlaceItem(this);
             return;
         }
 
-        _currentCell = validator.cell;
+        _currentCell = mergeValidator.cell;
         _currentCell.PlaceItem(this);
     }
 }

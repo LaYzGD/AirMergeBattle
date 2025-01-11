@@ -1,23 +1,25 @@
 using UnityEngine;
+using Zenject;
 
-public class Cell : MonoBehaviour
+public class Cell : MonoBehaviour, ICell
 {
     [SerializeField] private Transform _cellItemOrigin;
     [SerializeField] private SpriteRenderer _spriteRenderer;
 
     private CellItem _cellItem;
-    private MergeGrid _mergeGrid;
-    private InputReader _inputReader;
     private CellItemsPool _pool;
 
     public bool HasItem { get; private set; } = false;
 
-    public void Init(CellItemsPool pool, MergeGrid grid, InputReader reader, Color color)
+    [Inject]
+    public void Construct(CellItemsPool pool) 
+    {
+        _pool = pool;
+    }
+
+    public void Init(Color color)
     {
         _spriteRenderer.color = color;
-        _pool = pool;
-        _mergeGrid = grid;
-        _inputReader = reader;
     }
 
     public void CreateItem(TurretType type)
@@ -25,7 +27,7 @@ public class Cell : MonoBehaviour
         _cellItem = _pool.GetItem();
         _cellItem.transform.position = _cellItemOrigin.position;
         _cellItem.transform.SetParent(transform);
-        _cellItem.Init(this, _mergeGrid, _inputReader, type);
+        _cellItem.Init(this, type);
         SetItemFlag(true);
     }
 
@@ -34,7 +36,7 @@ public class Cell : MonoBehaviour
         HasItem = flag;
     }
 
-    public bool CanPlaceOrMergeItem(CellItem item)
+    public bool CanPlaceItem(CellItem item)
     {
         if (_cellItem != null && (_cellItem.TurretType != item.TurretType || _cellItem.TurretType.NextUpgrade == null))
         {

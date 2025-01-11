@@ -1,15 +1,22 @@
 using UnityEngine;
 using UnityEngine.Pool;
+using Zenject;
 
 public class ItemBoxPool : MonoBehaviour
 {
-    [SerializeField] private MergeGrid _grid;
     [SerializeField] private ItemBox _boxPrefab;
     [SerializeField] private ItemBoxType _wooden, _silver, _gold;
 
     private ObjectPool<ItemBox> _boxPool;
+    private MergeGrid _grid;
 
     private float _silverDropChance = 0f;
+
+    [Inject]
+    public void Construct(MergeGrid grid) 
+    {
+        _grid = grid;
+    }
 
     private void Awake()
     {
@@ -26,8 +33,8 @@ public class ItemBoxPool : MonoBehaviour
         }
 
         var box = _boxPool.Get();
-        box.transform.position = validator.cell.transform.position;
-        box.Initialize(_grid, validator.cell, isGolden ? _gold : (Random.Range(0f, 1f) < _silverDropChance ? _silver : _wooden), KillAction);
+        box.transform.position = validator.cellPos;
+        box.Initialize((Cell)validator.cell, isGolden ? _gold : (Random.Range(0f, 1f) < _silverDropChance ? _silver : _wooden), KillAction);
         validator.cell.SetItemFlag(true);
         return true;
     }

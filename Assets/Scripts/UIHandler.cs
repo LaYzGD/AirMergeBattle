@@ -1,9 +1,17 @@
 using UnityEngine;
+using Zenject;
 
 public class UIHandler : MonoBehaviour
 {
-    [SerializeField] private ItemBoxPool _itemBoxPool;
-    [SerializeField] private Money _money;
+    private ItemBoxPool _itemBoxPool;
+    private Money _money;
+
+    [Inject]
+    public void Construct(ItemBoxPool boxPool, Money money)
+    {
+        _itemBoxPool = boxPool;
+        _money = money;
+    }
 
     public void OnCreateBoxButtonClick() 
     {

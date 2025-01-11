@@ -2,18 +2,17 @@ using UnityEngine;
 
 public class MergeGrid : MonoBehaviour
 {
-    [SerializeField] private MergeGridData _mergeGridData;
+    [SerializeField] private Color _cellWhiteColor;
+    [SerializeField] private Color _cellBlackColor;
+    [SerializeField] private GridData _mergeGridData;
     [SerializeField] private Transform _origin;
     [SerializeField] private Cell _cellPrefab;
-    [SerializeField] private InputReader _reader;
-    [Space]
-    [SerializeField] private CellItemsPool _cellItemsPool;
 
-    private GridSystem<GridObject<Cell>> _grid;
+    private GridSystem<Cell> _grid;
 
     private void Start()
     {
-        _grid = new GridSystem<GridObject<Cell>>(_mergeGridData.Width, _mergeGridData.Height, _mergeGridData.CellSize, _origin.position);
+        _grid = new GridSystem<Cell>(_mergeGridData.Width, _mergeGridData.Height, _mergeGridData.CellSize, _origin.position);
         _grid.CreateGrid(null);
         InitializeGrid();
     }
@@ -24,10 +23,8 @@ public class MergeGrid : MonoBehaviour
         cell.transform.position = pos;
         cell.transform.SetParent(_origin);
         cell.transform.localScale = Vector2.one * _mergeGridData.CellSize;
-        cell.Init(_cellItemsPool, this, _reader, counter == 0 ? _mergeGridData.CellWhiteColor : _mergeGridData.CellBlackColor);
-        var gridObject = new GridObject<Cell>(pos);
-        gridObject.SetValue(cell);
-        _grid.SetValue(pos, gridObject);
+        cell.Init(counter == 0 ? _cellWhiteColor : _cellBlackColor);
+        _grid.SetValue(pos, cell);
     }
 
     private void InitializeGrid()
@@ -51,24 +48,24 @@ public class MergeGrid : MonoBehaviour
         
         if (_grid.TryGetCoordinates(pos, out cellPos))
         {
-            return new GridPlacementValidator(true, _grid.GetValue(cellPos).Object);
+            return new GridPlacementValidator(true, _grid.GetValue(cellPos), cellPos);
         }
 
-        return new GridPlacementValidator(false, null);
+        return new GridPlacementValidator(false, null, Vector2.zero);
     }
 
     public GridPlacementValidator ValidateBoxPlacement()
     {
         foreach (var pos in _grid.GetPositions())
         {
-            var cell = _grid.GetValue(pos).Object;
+            var cell = _grid.GetValue(pos);
             if (!cell.HasItem)
             {
-                return new GridPlacementValidator(true, cell);
+                return new GridPlacementValidator(true, cell, cell.transform.position);
             }
         }
 
-        return new GridPlacementValidator(false, null);
+        return new GridPlacementValidator(false, null, Vector2.zero);
     }
 
     public void CreateItem(TurretType type, Cell cell) 
@@ -80,11 +77,13 @@ public class MergeGrid : MonoBehaviour
 public struct GridPlacementValidator 
 {
     public readonly bool flag;
-    public readonly Cell cell;
+    public readonly ICell cell;
+    public readonly Vector2 cellPos;
 
-    public GridPlacementValidator(bool flag, Cell cell)
+    public GridPlacementValidator(bool flag, ICell cell, Vector2 cellPos)
     {
         this.flag = flag;
         this.cell = cell;
+        this.cellPos = cellPos; 
     }
 }
