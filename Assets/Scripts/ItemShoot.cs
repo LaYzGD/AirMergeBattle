@@ -11,7 +11,7 @@ public class ItemShoot : MonoBehaviour
     private ProjectilePool _projectilePool;
     private ProjectileData _projectileData;
 
-    private int _damage;
+    private float _damage;
     private float _shootingDelay;
     private int _projectileAmount;
     private float _distanceBetweenProjectiles;
@@ -19,18 +19,20 @@ public class ItemShoot : MonoBehaviour
     private Vector2[] _projectilePositions;
 
     private Coroutine _coroutine;
+    private GlobalStats _globalStats;
 
     [Inject]
-    public void Construct(ProjectilePool pool)
+    public void Construct(ProjectilePool pool, GlobalStats stats)
     {
         _projectilePool = pool;
+        _globalStats = stats;
     }
 
     public void Init(TurretType type)
     {
         _projectileData = type.ProjectileData;
-        _shootingDelay = type.ShootingDelay;
-        _damage = type.Damage;
+        _shootingDelay = type.ShootingDelay - (type.ShootingDelay * _globalStats.GetStat(StatType.StructureDelay).CurrentValue);
+        _damage = type.Damage + (type.Damage * _globalStats.GetStat(StatType.StructureDamage).CurrentValue);
         _projectileAmount = type.ProjectilesAmount;
         _distanceBetweenProjectiles = type.DistanceBetweenProjectiles;
     }

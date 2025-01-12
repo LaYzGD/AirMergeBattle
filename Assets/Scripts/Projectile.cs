@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using Zenject;
 
@@ -11,34 +12,39 @@ public class Projectile : MonoBehaviour
     [SerializeField] private Rigidbody2D _rigidBody2D;
     [SerializeField] private SpriteRenderer _spriteRenderer;
 
-    private int _damage;
+    private float _damage;
     private float _movementSpeed;
     private float _lifeTime;
     private float _explosionRadius;
     private bool _isAutoAiming;
+    private float _rotationSpeed;
 
     private LayerMask _enemyLayer;
     private Base _playerBase;
+    private GlobalStats _globalStats;
 
     private Transform _target;
 
     private Action<Projectile> _destroyAction;
 
     [Inject]
-    public void Construct(Base playerBase)
+    public void Construct(Base playerBase, GlobalStats stats)
     {
         _playerBase = playerBase;
+        _globalStats = stats;
     }
 
-    public void Initialize(ProjectileData data, int damage, LayerMask enemyLayer)
+    public void Initialize(ProjectileData data, float damage, LayerMask enemyLayer)
     {
         _spriteRenderer.sprite = data.Sprite;
         _damage = damage;
-        _movementSpeed = data.MovementSpeed;
+        _movementSpeed = data.MovementSpeed + (data.MovementSpeed * _globalStats.GetStat(StatType.ProjectileSpeed).CurrentValue);
         _lifeTime = data.LifeTime;
         _explosionRadius = data.ExplosionRadius;
         _enemyLayer = enemyLayer;
         _isAutoAiming = data.IsAutoAiming;
+        transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        _rotationSpeed = data.RotationSpeed;
     }
 
     public void SetKillAction(Action<Projectile> killAction)
@@ -58,6 +64,8 @@ public class Projectile : MonoBehaviour
                 StartCoroutine(FollowTarget());
                 return;
             }
+
+            _destroyAction(this);
         }
 
         _rigidBody2D.linearVelocityY = _movementSpeed;
@@ -90,9 +98,15 @@ public class Projectile : MonoBehaviour
 
     private IEnumerator FollowTarget()
     {
-        while (_target != null)
+        while (_target != null && _target.gameObject.activeSelf)
         {
-            _rigidBody2D.position = Vector2.MoveTowards(_rigidBody2D.position, _target.position, _movementSpeed * Time.deltaTime);
+            Vector2 direction = (Vector2)_target.position - _rigidBody2D.position;
+            direction.Normalize();
+
+            float rotationAmount = Vector3.Cross(direction, transform.up).z;
+
+            _rigidBody2D.angularVelocity = -rotationAmount * _rotationSpeed;
+            _rigidBody2D.linearVelocity = transform.up * _movementSpeed;
             yield return null;
         }
 

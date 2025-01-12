@@ -10,7 +10,6 @@ public class CellItem : MonoBehaviour
     private MergeGrid _mergeGrid;
     private PlacementGrid _placementGrid;
     private InputReader _inputReader;
-
     private ICell _currentCell;
 
     public TurretType TurretType { get; private set; }

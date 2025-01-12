@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,19 +16,27 @@ public class WaveSpawner : MonoBehaviour
 
     private WaveData _currentWave;
     private int _currentWaveIndex = 0;
+    private int _currentWaveNumber = 1;
 
     private Dictionary<EnemyData, int> _currentWaveEnemies;
     private int _allCurrentWaveEnemiesAmount;
+    private int _destroyedEnemies;
 
     private bool _waveIsConfigured;
- 
-    private void Awake()
-    {
-        _enemyPool = new ObjectPool<Enemy>(OnCreate, OnGet, OnRelease, OnEnemyDestroy, false);
-    }
+
+    public int CurrentReward { get; private set; }
+
+    public int CurrentWaveNumber => _currentWaveNumber;
+
+    public event Action<int> OnWaveFinished;
+    public event Action<int> OnWaveProgressUpdate;
+    public event Action<int> OnWaveConfigured;
+
 
     private void Start()
     {
+        _enemyPool = new ObjectPool<Enemy>(OnCreate, OnGet, OnRelease, OnEnemyDestroy, false);
+
         SpawnWave();
     }
 
@@ -44,7 +53,11 @@ public class WaveSpawner : MonoBehaviour
             _currentWaveEnemies.Add(info.EnemyType, info.Amount);
         }
 
+        _destroyedEnemies = 0;
+        CurrentReward = _currentWave.Reward;
+
         _waveIsConfigured = true;
+        OnWaveConfigured?.Invoke(_allCurrentWaveEnemiesAmount);
     }
 
     private void SpawnEnemy(Vector2 position, EnemyData data, bool isLast = false)
@@ -64,6 +77,23 @@ public class WaveSpawner : MonoBehaviour
         }
 
         StartCoroutine(SpawnWaveCoroutine());
+    }
+
+    public void FinishWave()
+    {
+        OnWaveFinished?.Invoke(_currentWaveNumber);
+        _currentWaveIndex++;
+        if (_currentWaveIndex >= _waves.Length)
+        {
+            _currentWaveIndex = _waves.Length - 1;
+        }
+        _currentWaveNumber++;
+    }
+
+    public void UpdateWaveProgress()
+    {
+        _destroyedEnemies++;
+        OnWaveProgressUpdate?.Invoke(_destroyedEnemies);
     }
 
     private IEnumerator SpawnWaveCoroutine()

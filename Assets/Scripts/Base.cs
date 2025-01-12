@@ -1,19 +1,45 @@
+using System;
 using UnityEngine;
+using Zenject;
 
 public class Base : MonoBehaviour, IDamageable
 {
-    [SerializeField] private int _maxHealth;
+    [SerializeField] private float _maxHealth;
 
     [SerializeField] private Vector2 _screenCenter = Vector2.zero;
     [SerializeField] private float _enemyDetectionRadius;
     [SerializeField] private LayerMask _enemyLayer;
 
-    private int _currentHealth;
+    private GlobalStats _globalStats;
+    private float _currentHealth;
+    private float _currentMaxHealth;
 
-    public int MaxHealth => _maxHealth;
-    public int CurrentHealth => _currentHealth;
+    public event Action OnBaseDestroyed;
+    public event Action<float, float> OnHealthUpdate;
 
-    public void TakeDamage(int damage)
+    public float MaxHealth => _currentMaxHealth;
+    public float CurrentHealth => _currentHealth;
+
+    [Inject]
+    public void Construct(GlobalStats stats) 
+    {
+        _globalStats = stats;
+        _currentMaxHealth = _maxHealth + _globalStats.GetStat(StatType.BaseHealth).CurrentValue;
+        _currentHealth = _currentMaxHealth;
+    }
+
+    public void IncreaseMaxHealth()
+    {
+        _currentMaxHealth = _maxHealth + _globalStats.GetStat(StatType.BaseHealth).CurrentValue;
+        OnHealthUpdate?.Invoke(_currentHealth, _currentMaxHealth);
+    }
+
+    public void Restart()
+    {
+        _currentHealth = _currentMaxHealth;
+    }
+
+    public void TakeDamage(float damage)
     {
         if (damage <= 0)
         {
@@ -21,6 +47,7 @@ public class Base : MonoBehaviour, IDamageable
         }
 
         _currentHealth -= damage;
+        OnHealthUpdate?.Invoke(_currentHealth, _currentMaxHealth);
         if (_currentHealth <= 0)
         {
             _currentHealth = 0;
@@ -52,7 +79,7 @@ public class Base : MonoBehaviour, IDamageable
 
     private void Destroy()
     {
-
+        OnBaseDestroyed?.Invoke();
     }
 
     private void OnDrawGizmosSelected()

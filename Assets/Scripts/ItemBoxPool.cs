@@ -4,18 +4,19 @@ using Zenject;
 
 public class ItemBoxPool : MonoBehaviour
 {
+    [SerializeField] private float _silverDropChance = 0.1f;
     [SerializeField] private ItemBox _boxPrefab;
     [SerializeField] private ItemBoxType _wooden, _silver, _gold;
 
     private ObjectPool<ItemBox> _boxPool;
     private MergeGrid _grid;
-
-    private float _silverDropChance = 0f;
+    private GlobalStats _globalStats;
 
     [Inject]
-    public void Construct(MergeGrid grid) 
+    public void Construct(MergeGrid grid, GlobalStats stats) 
     {
         _grid = grid;
+        _globalStats = stats;
     }
 
     private void Awake()
@@ -39,11 +40,9 @@ public class ItemBoxPool : MonoBehaviour
         return true;
     }
 
-    public void IncreaseSilverBoxDropChance(float value)
+    public void IncreaseSilverBoxDropChance()
     {
-        if (value <= 0) return;
-
-        _silverDropChance += value;
+        _silverDropChance = _globalStats.GetStat(StatType.SilverBoxDropChance).CurrentValue;
     }
     
     private void KillAction(ItemBox box)

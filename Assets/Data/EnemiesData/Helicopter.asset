@@ -15,5 +15,5 @@ MonoBehaviour:
   <Sprite>k__BackingField: {fileID: -3581537358336926539, guid: 35b9d42bfda959e4b82fb1cb8b4e208e, type: 3}
   <Healh>k__BackingField: 20
   <Damage>k__BackingField: 20
-  <MovementSpeed>k__BackingField: 2
+  <MovementSpeed>k__BackingField: 1
   <Cost>k__BackingField: 40
