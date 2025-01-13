@@ -11,6 +11,8 @@ public class Projectile : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rigidBody2D;
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    
+    private VFXObjectData _vfxData;
 
     private float _damage;
     private float _movementSpeed;
@@ -22,16 +24,22 @@ public class Projectile : MonoBehaviour
     private LayerMask _enemyLayer;
     private Base _playerBase;
     private GlobalStats _globalStats;
+    private AudioPlayer _audioPlayer;
+    private AudioClip _explosionSound;
+    private float _explosionSoundVolume;
 
+    private VFXPool _vfxPool;
     private Transform _target;
 
     private Action<Projectile> _destroyAction;
 
     [Inject]
-    public void Construct(Base playerBase, GlobalStats stats)
+    public void Construct(Base playerBase, GlobalStats stats, AudioPlayer audioPlayer, VFXPool vfxPool)
     {
         _playerBase = playerBase;
         _globalStats = stats;
+        _audioPlayer = audioPlayer;
+        _vfxPool = vfxPool;
     }
 
     public void Initialize(ProjectileData data, float damage, LayerMask enemyLayer)
@@ -43,8 +51,11 @@ public class Projectile : MonoBehaviour
         _explosionRadius = data.ExplosionRadius;
         _enemyLayer = enemyLayer;
         _isAutoAiming = data.IsAutoAiming;
+        _vfxData = data.VFXData;
         transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         _rotationSpeed = data.RotationSpeed + (data.RotationSpeed * _globalStats.GetStat(StatType.ProjectileSpeed).CurrentValue);
+        _explosionSound = data.ExplosionSound;
+        _explosionSoundVolume = data.ExplosionSoundVolume;
     }
 
     public void SetKillAction(Action<Projectile> killAction)
@@ -104,7 +115,7 @@ public class Projectile : MonoBehaviour
             yield return null;
         }
 
-        Destroy();
+        Destroy(false);
     }
 
     private IEnumerator FollowTarget()
@@ -124,7 +135,7 @@ public class Projectile : MonoBehaviour
         FindTarget(false);
     }
 
-    private void Destroy()
+    private void Destroy(bool hasSound = true)
     {
         if (_explosionRadius > 0)
         {
@@ -136,6 +147,13 @@ public class Projectile : MonoBehaviour
                     damageable.TakeDamage(_damage);
                 }
             }
+        }
+
+        _vfxPool.SpawnVFX(_vfxData.VFXType, transform.position, _vfxData.Prefab);
+
+        if (hasSound)
+        {
+            _audioPlayer.PlaySound(_explosionSound, _explosionSoundVolume);
         }
 
         StopAllCoroutines();

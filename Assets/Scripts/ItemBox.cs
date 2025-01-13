@@ -8,16 +8,20 @@ using Zenject;
 public class ItemBox : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private AudioClip _boxClickSound;
+    [SerializeField] private float _boxClickSoundVolume;
 
     private ItemBoxType _itemBoxType;
     private MergeGrid _mergeGrid;
     private Action<ItemBox> _onDestroy;
+    private AudioPlayer _audioPlayer;
     private ICell _cell;
 
     [Inject]
-    public void Construct(MergeGrid grid)
+    public void Construct(MergeGrid grid, AudioPlayer audioPlayer)
     {
         _mergeGrid = grid;
+        _audioPlayer = audioPlayer;
     }
 
     public void Initialize(Cell cell, ItemBoxType boxType, Action<ItemBox> killAction)
@@ -31,7 +35,7 @@ public class ItemBox : MonoBehaviour
     private void OnMouseDown()
     {
         SpawnRandomItem();
-
+        _audioPlayer.PlaySound(_boxClickSound, _boxClickSoundVolume);
         _onDestroy(this);
     }
 

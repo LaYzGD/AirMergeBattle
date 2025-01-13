@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62ef4c58e7906314ca91e09d736e4159, type: 3}
+  m_Script: {fileID: 11500000, guid: 4430b5da4b53ece47891ed3f08379f49, type: 3}
   m_Name: MergeGridData
   m_EditorClassIdentifier: 
   <Height>k__BackingField: 3
   <Width>k__BackingField: 7
   <CellSize>k__BackingField: 1.32
-  <CellWhiteColor>k__BackingField: {r: 0.64029187, g: 0.7660377, b: 0.6407015, a: 0.64705884}
-  <CellBlackColor>k__BackingField: {r: 0.25622642, g: 0.3660378, b: 0.3174187, a: 0.64705884}

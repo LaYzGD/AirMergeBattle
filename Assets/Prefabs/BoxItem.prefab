@@ -149,6 +149,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spriteRenderer: {fileID: 7694680273406894502}
+  _boxClickSound: {fileID: 8300000, guid: 2897c0f7815897a438404e5ad2ddb3b5, type: 3}
+  _boxClickSoundVolume: 1
 --- !u!114 &-468885443586247844
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -135,6 +135,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cellItemOrigin: {fileID: 4308510581175757895}
   _spriteRenderer: {fileID: 5526960932034730286}
+  _mergeSound: {fileID: 8300000, guid: 159f60397201ac04b9b7d1f1bfa842ef, type: 3}
+  _mergeSoundVolume: 0.8
+  _vfxData: {fileID: 11400000, guid: 4fb55f0ecc7402b4da8ce710defa6948, type: 2}
 --- !u!114 &1908173642723365742
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -17,3 +17,4 @@ MonoBehaviour:
   <Damage>k__BackingField: 20
   <MovementSpeed>k__BackingField: 2
   <Cost>k__BackingField: 100
+  <VFXData>k__BackingField: {fileID: 11400000, guid: 0e222208f107f014bbc4d7b1320d976c, type: 2}

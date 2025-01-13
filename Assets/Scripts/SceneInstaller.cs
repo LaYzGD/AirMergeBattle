@@ -14,6 +14,8 @@ public class SceneInstaller : MonoInstaller
     [SerializeField] private ProjectilePool _projectilePool;
     [SerializeField] private WaveSpawner _waveSpawner;
     [SerializeField] private PurchaseHandler _purchaseHandler;
+    [SerializeField] private AudioPlayer _audioPlayer;
+    [SerializeField] private VFXPool _vFXPool;
 
     public override void InstallBindings()
     {
@@ -29,5 +31,7 @@ public class SceneInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<ProjectilePool>().FromInstance(_projectilePool).AsSingle();
         Container.BindInterfacesAndSelfTo<WaveSpawner>().FromInstance(_waveSpawner).AsSingle();
         Container.BindInterfacesAndSelfTo<PurchaseHandler>().FromInstance(_purchaseHandler).AsSingle();
+        Container.BindInterfacesAndSelfTo<AudioPlayer>().FromInstance(_audioPlayer).AsSingle();
+        Container.BindInterfacesAndSelfTo<VFXPool>().FromInstance(_vFXPool).AsSingle();
     }
 }

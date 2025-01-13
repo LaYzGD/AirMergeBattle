@@ -19,6 +19,11 @@ public class UIHandler : MonoBehaviour
     [Space]
     [SerializeField] private GameObject _waveWinScreen;
     [SerializeField] private GameObject _waveLoseScreen;
+    [Space]
+    [SerializeField] private AudioClip _clickSound;
+    [SerializeField] private float _clickSoundVolume;
+    [SerializeField] private AudioClip _winSound;
+    [SerializeField] private float _winSoundVolume;
 
     private PurchaseHandler _purchaseHandler;
     private GlobalStats _globalStats;
@@ -26,11 +31,12 @@ public class UIHandler : MonoBehaviour
     private WaveSpawner _waveSpawner;
     private ItemBoxPool _itemBoxPool;
     private Base _playerBase;
+    private AudioPlayer _audioPlayer;
 
     private int _chestProgress = 0;
 
     [Inject]
-    public void Construct(PurchaseHandler purchaseHandler, Money money, GlobalStats stats, WaveSpawner waveSpawner, ItemBoxPool pool, Base playerBase)
+    public void Construct(PurchaseHandler purchaseHandler, Money money, GlobalStats stats, WaveSpawner waveSpawner, ItemBoxPool pool, Base playerBase, AudioPlayer audioPlayer)
     {
         _purchaseHandler = purchaseHandler;
         _money = money;
@@ -38,6 +44,7 @@ public class UIHandler : MonoBehaviour
         _waveSpawner = waveSpawner;
         _itemBoxPool = pool;
         _playerBase = playerBase;
+        _audioPlayer = audioPlayer;
     }
 
     private void Start()
@@ -95,6 +102,7 @@ public class UIHandler : MonoBehaviour
         _waveWinScreen.gameObject.SetActive(true);
         _waveReward.text = $"+{_waveSpawner.CurrentReward}";
         _money.AddMoney(_waveSpawner.CurrentReward);
+        _audioPlayer.PlaySound(_winSound, _winSoundVolume);
         _chestProgress++;
         if (_chestProgress == _goldenChestProgress.maxValue)
         {
@@ -135,6 +143,11 @@ public class UIHandler : MonoBehaviour
         {
             item.Cover.SetActive(wave < item.WaveToOpen);
         }
+    }
+
+    public void PlayClickSound()
+    {
+        _audioPlayer.PlaySound(_clickSound, _clickSoundVolume);
     }
 
     public void OnCreateBoxButtonClick() 

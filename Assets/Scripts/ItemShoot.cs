@@ -7,6 +7,8 @@ public class ItemShoot : MonoBehaviour
 {
     [SerializeField] private Transform _shootingPoint;
     [SerializeField] private LayerMask _enemyLayer;
+    [SerializeField] private AudioClip _shootingSound;
+    [SerializeField] private float _shootingSoundVolume;
 
     private ProjectilePool _projectilePool;
     private ProjectileData _projectileData;
@@ -20,14 +22,16 @@ public class ItemShoot : MonoBehaviour
 
     private Coroutine _coroutine;
     private GlobalStats _globalStats;
+    private AudioPlayer _audioPlayer;
 
     private TurretType _turretType;
 
     [Inject]
-    public void Construct(ProjectilePool pool, GlobalStats stats)
+    public void Construct(ProjectilePool pool, GlobalStats stats, AudioPlayer audioPlayer)
     {
         _projectilePool = pool;
         _globalStats = stats;
+        _audioPlayer = audioPlayer;
     }
 
     public void Init(TurretType type)
@@ -62,6 +66,7 @@ public class ItemShoot : MonoBehaviour
         {
             var shootingDelay = _shootingDelay - (_turretType.ShootingDelay * _globalStats.GetStat(StatType.StructureDelay).CurrentValue);
             var damage = _damage + (_turretType.Damage * _globalStats.GetStat(StatType.StructureDamage).CurrentValue);
+            _audioPlayer.PlaySound(_shootingSound, _shootingSoundVolume);
 
             for (int i = 0; i < _projectileAmount; i++)
             {

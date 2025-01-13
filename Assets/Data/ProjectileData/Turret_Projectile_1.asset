@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: Turret_Projectile_1
   m_EditorClassIdentifier: 
   <MovementSpeed>k__BackingField: 20
+  <RotationSpeed>k__BackingField: 200
   <LifeTime>k__BackingField: 2
   <IsAutoAiming>k__BackingField: 0
   <ExplosionRadius>k__BackingField: 0
   <Sprite>k__BackingField: {fileID: -2405055856156029957, guid: 48b335cc1808c624897bd37824c00a7f, type: 3}
+  <ExplosionSound>k__BackingField: {fileID: 8300000, guid: 73fbd3b27bf0bbe47b1c6367314f89e6, type: 3}
+  <ExplosionSoundVolume>k__BackingField: 0.45
+  <VFXData>k__BackingField: {fileID: 11400000, guid: 09f96be5df8d44f4cbe1cd830ae1a8a8, type: 2}

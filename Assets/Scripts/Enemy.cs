@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField] private Rigidbody2D _rigidbody2D;
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private AudioClip _destroySound;
+    [SerializeField] private float _destroySoundVolume;
 
     private EnemyData _enemyData;
 
@@ -15,18 +17,24 @@ public class Enemy : MonoBehaviour, IDamageable
     private Action<Enemy> _killAction;
     public bool IsLast { get; private set; }
 
+    private VFXObjectData _vfxData;
+    private VFXPool _vfxPool;
     private Money _money;
+    private AudioPlayer _audioPlayer;
 
     [Inject]
-    public void Construct(Money money)
+    public void Construct(Money money, AudioPlayer audioPlayer, VFXPool vfxPool)
     {
         _money = money;
+        _audioPlayer = audioPlayer;
+        _vfxPool = vfxPool;
     }
 
     public void Init(EnemyData data, Action<Enemy> killAction, bool isLast = false)
     {
         _enemyData = data;
         _currentHealth = _enemyData.Healh;
+        _vfxData = _enemyData.VFXData;
         _killAction = killAction;
         _spriteRenderer.sprite = _enemyData.Sprite;
         IsLast = isLast;
@@ -66,6 +74,8 @@ public class Enemy : MonoBehaviour, IDamageable
     private void Destroy()
     {
         _money.AddMoney(_enemyData.Cost);
+        _vfxPool.SpawnVFX(_vfxData.VFXType, transform.position, _vfxData.Prefab);
+        _audioPlayer.PlaySound(_destroySound, _destroySoundVolume);
         _killAction(this);
     }
 }

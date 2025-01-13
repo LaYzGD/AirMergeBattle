@@ -6,16 +6,23 @@ public class Cell : MonoBehaviour, ICell
 {
     [SerializeField] private Transform _cellItemOrigin;
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private AudioClip _mergeSound;
+    [SerializeField] private float _mergeSoundVolume;
+    [SerializeField] private VFXObjectData _vfxData;
 
     private CellItem _cellItem;
-    private CellItemsPool _pool;
+    private CellItemsPool _itemsPool;
+    private AudioPlayer _audioPlayer;
+    private VFXPool _vFXPool;
 
     public bool HasItem { get; private set; } = false;
 
     [Inject]
-    public void Construct(CellItemsPool pool) 
+    public void Construct(CellItemsPool itemsPool, AudioPlayer audioPlayer, VFXPool vfxPool) 
     {
-        _pool = pool;
+        _itemsPool = itemsPool;
+        _audioPlayer = audioPlayer;
+        _vFXPool = vfxPool;
     }
 
     public void Init(Color color)
@@ -25,7 +32,7 @@ public class Cell : MonoBehaviour, ICell
 
     public void CreateItem(TurretType type)
     {
-        _cellItem = _pool.GetItem();
+        _cellItem = _itemsPool.GetItem();
         _cellItem.transform.position = _cellItemOrigin.position;
         _cellItem.transform.SetParent(transform);
         _cellItem.Init(this, type);
@@ -58,7 +65,7 @@ public class Cell : MonoBehaviour, ICell
             return;
         }
 
-        _pool.RemoveItem(_cellItem);
+        _itemsPool.RemoveItem(_cellItem);
         MergeItems(item);
     }
 
@@ -73,8 +80,10 @@ public class Cell : MonoBehaviour, ICell
         _cellItem = item;
         var nextUpgrade = _cellItem.TurretType.NextUpgrade;
         _cellItem.transform.position = _cellItemOrigin.position;
+        _vFXPool.SpawnVFX(_vfxData.VFXType, _cellItemOrigin.position, _vfxData.Prefab);
         _cellItem.transform.SetParent(transform);
         _cellItem.SetType(nextUpgrade);
         SetItemFlag(true);
+        _audioPlayer.PlaySound(_mergeSound, _mergeSoundVolume);
     }
 }

@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: RocketLauncher_Projectile_2
   m_EditorClassIdentifier: 
   <MovementSpeed>k__BackingField: 5
+  <RotationSpeed>k__BackingField: 200
   <LifeTime>k__BackingField: 3
   <IsAutoAiming>k__BackingField: 1
   <ExplosionRadius>k__BackingField: 3
   <Sprite>k__BackingField: {fileID: -82509775303020367, guid: 48b335cc1808c624897bd37824c00a7f, type: 3}
+  <ExplosionSound>k__BackingField: {fileID: 8300000, guid: c9edfbea43f21a048b7b8a35c11954a4, type: 3}
+  <ExplosionSoundVolume>k__BackingField: 0.3
+  <VFXData>k__BackingField: {fileID: 11400000, guid: d2f597dee9fc9bf43afa372239cb2d52, type: 2}

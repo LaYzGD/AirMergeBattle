@@ -47,5 +47,8 @@ TagManager:
   - name: Entities
     uniqueID: 2249617807
     locked: 0
+  - name: Effects
+    uniqueID: 2474950651
+    locked: 0
   m_RenderingLayers:
   - Default
