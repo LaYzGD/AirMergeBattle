@@ -6,6 +6,14 @@ public class GlobalStats : MonoBehaviour
 {
     [SerializeField] private Stat[] _allStats;
 
+    public void SetUp()
+    {
+        foreach (Stat stat in _allStats) 
+        {
+            stat.Set(stat.BaseValue);
+        }
+    }
+
     public void IncreaseStat(StatType type, float value)
     {
         if (value <= 0) return;
@@ -49,6 +57,7 @@ public enum StatType
 public class Stat
 {
     [field: SerializeField] public float MaxValue { get; private set; } = -1f;
+    [field: SerializeField] public float BaseValue { get; private set; }
     [field: SerializeField] public StatType Type { get; private set; }
     public float CurrentValue { get; private set; }
 

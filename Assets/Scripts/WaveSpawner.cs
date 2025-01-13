@@ -23,6 +23,7 @@ public class WaveSpawner : MonoBehaviour
     private int _destroyedEnemies;
 
     private bool _waveIsConfigured;
+    private List<Enemy> _activeEnemies;
 
     public int CurrentReward { get; private set; }
 
@@ -44,6 +45,7 @@ public class WaveSpawner : MonoBehaviour
     {
         _currentWave = _waves[_currentWaveIndex];
         _currentWaveEnemies = new Dictionary<EnemyData, int>();
+        _activeEnemies = new List<Enemy>();
         _allCurrentWaveEnemiesAmount = 0;
 
         for (int i = 0; i < _currentWave.AllEnemies.Length; i++)
@@ -67,6 +69,7 @@ public class WaveSpawner : MonoBehaviour
         enemy.transform.SetParent(transform);
         enemy.transform.position = position;
         enemy.StartMovement();
+        _activeEnemies.Add(enemy);
     }
 
     public void SpawnWave()
@@ -79,21 +82,42 @@ public class WaveSpawner : MonoBehaviour
         StartCoroutine(SpawnWaveCoroutine());
     }
 
+    public void RestartCurrentWave()
+    {
+        Stop();
+
+        SpawnWave();
+    }
+
+    private void RemoveActiveEnemies()
+    {
+        if (_activeEnemies.Count > 0)
+        {
+            foreach (var enemy in _activeEnemies)
+            {
+                _enemyPool.Release(enemy);
+            }
+        }
+    }
+
+    public void Stop()
+    {
+        StopAllCoroutines();
+        _waveIsConfigured = false;
+
+        RemoveActiveEnemies();
+    }
+
     public void FinishWave()
     {
-        OnWaveFinished?.Invoke(_currentWaveNumber);
         _currentWaveIndex++;
         if (_currentWaveIndex >= _waves.Length)
         {
             _currentWaveIndex = _waves.Length - 1;
         }
         _currentWaveNumber++;
-    }
-
-    public void UpdateWaveProgress()
-    {
-        _destroyedEnemies++;
-        OnWaveProgressUpdate?.Invoke(_destroyedEnemies);
+        _waveIsConfigured = false;
+        OnWaveFinished?.Invoke(_currentWaveNumber);
     }
 
     private IEnumerator SpawnWaveCoroutine()
@@ -118,6 +142,15 @@ public class WaveSpawner : MonoBehaviour
     private void KillAction(Enemy enemy)
     {
         _enemyPool.Release(enemy);
+
+        _activeEnemies.Remove(enemy);
+        _destroyedEnemies++;
+        OnWaveProgressUpdate?.Invoke(_destroyedEnemies);
+
+        if (enemy.IsLast)
+        {
+            FinishWave();
+        }
     }
 
     private Enemy OnCreate()

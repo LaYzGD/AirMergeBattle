@@ -80,7 +80,7 @@ public class UIHandler : MonoBehaviour
             return;
         }
 
-        statUI.TextField.text = $"{stat.CurrentValue}% + {upgrade}%";
+        statUI.TextField.text = $"{Mathf.RoundToInt(stat.CurrentValue * 100)}% + {Mathf.RoundToInt(upgrade * 100)}%";
 
         if (type == StatType.BaseHealth)
         {
@@ -115,6 +115,7 @@ public class UIHandler : MonoBehaviour
 
     private void ConfigureWave(int maxEnemies)
     {
+        _waveProgress.value = 0;
         _waveProgress.maxValue = maxEnemies;
     }
 
@@ -172,7 +173,12 @@ public class UIHandler : MonoBehaviour
 
     public void OnBuyBaseUpgrade()
     {
-        BuyUpgrade(StatType.BaseHealth);
+        var upgrade = BuyUpgrade(StatType.BaseHealth);
+
+        if (upgrade) 
+        {
+            _playerBase.IncreaseMaxHealth();
+        }
     }
 
     public void OnBuyProjectileUpgrade()
@@ -190,7 +196,7 @@ public class UIHandler : MonoBehaviour
         BuyUpgrade(StatType.StructureDelay);
     }
 
-    private void BuyUpgrade(StatType type)
+    private bool BuyUpgrade(StatType type)
     {
         var isUpgradeBought = _purchaseHandler.TryBuyUpgrade(type);
 
@@ -198,16 +204,17 @@ public class UIHandler : MonoBehaviour
         {
             //Play Sound
 
-            return;
+            return true;
         }
 
         //Play Sound
+        return false;
     }
 
     public void OnWaveRestart()
     {
         _playerBase.Restart();
-        _waveSpawner.SpawnWave();
+        _waveSpawner.RestartCurrentWave();
     }
 
     public void OnNextWaveStart()
@@ -223,6 +230,7 @@ public class UIHandler : MonoBehaviour
         _waveSpawner.OnWaveProgressUpdate -= UpdateWaveProgress;
         _waveSpawner.OnWaveConfigured -= ConfigureWave;
         _playerBase.OnBaseDestroyed -= ShowWaveLoseScreen;
+        _playerBase.OnHealthUpdate -= UpdateBaseInfo;
     }
 
     [Serializable]

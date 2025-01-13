@@ -21,6 +21,8 @@ public class ItemShoot : MonoBehaviour
     private Coroutine _coroutine;
     private GlobalStats _globalStats;
 
+    private TurretType _turretType;
+
     [Inject]
     public void Construct(ProjectilePool pool, GlobalStats stats)
     {
@@ -31,8 +33,9 @@ public class ItemShoot : MonoBehaviour
     public void Init(TurretType type)
     {
         _projectileData = type.ProjectileData;
-        _shootingDelay = type.ShootingDelay - (type.ShootingDelay * _globalStats.GetStat(StatType.StructureDelay).CurrentValue);
-        _damage = type.Damage + (type.Damage * _globalStats.GetStat(StatType.StructureDamage).CurrentValue);
+        _turretType = type;
+        _damage = type.Damage;
+        _shootingDelay = type.ShootingDelay;
         _projectileAmount = type.ProjectilesAmount;
         _distanceBetweenProjectiles = type.DistanceBetweenProjectiles;
     }
@@ -57,15 +60,18 @@ public class ItemShoot : MonoBehaviour
     {
         while (true) 
         {
+            var shootingDelay = _shootingDelay - (_turretType.ShootingDelay * _globalStats.GetStat(StatType.StructureDelay).CurrentValue);
+            var damage = _damage + (_turretType.Damage * _globalStats.GetStat(StatType.StructureDamage).CurrentValue);
+
             for (int i = 0; i < _projectileAmount; i++)
             {
                 var projectile = _projectilePool.GetProjectile();
                 projectile.transform.position = _projectilePositions[i];
-                projectile.Initialize(_projectileData, _damage, _enemyLayer);
+                projectile.Initialize(_projectileData, damage, _enemyLayer);
                 projectile.StartMovement();
             }
 
-            yield return new WaitForSecondsRealtime(_shootingDelay);
+            yield return new WaitForSecondsRealtime(shootingDelay);
         }
     }
 

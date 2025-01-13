@@ -13,17 +13,14 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private float _currentHealth;
     private Action<Enemy> _killAction;
-
-    private bool _isLast;
+    public bool IsLast { get; private set; }
 
     private Money _money;
-    private WaveSpawner _waveSpawner;
 
     [Inject]
-    public void Construct(Money money, WaveSpawner spawner)
+    public void Construct(Money money)
     {
         _money = money;
-        _waveSpawner = spawner;
     }
 
     public void Init(EnemyData data, Action<Enemy> killAction, bool isLast = false)
@@ -31,8 +28,8 @@ public class Enemy : MonoBehaviour, IDamageable
         _enemyData = data;
         _currentHealth = _enemyData.Healh;
         _killAction = killAction;
-        _isLast = isLast;
         _spriteRenderer.sprite = _enemyData.Sprite;
+        IsLast = isLast;
     }
 
     public void StartMovement()
@@ -43,7 +40,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage) 
     {
-        if (damage <= 0)
+        if (damage <= 0 || _currentHealth <= 0)
         {
             return;
         }
@@ -61,25 +58,13 @@ public class Enemy : MonoBehaviour, IDamageable
         if (collider.TryGetComponent(out Base playerBase))
         {
             playerBase.TakeDamage(_enemyData.Damage);
-            SendMessages();
             _killAction(this);
         }
     }
 
-    private void SendMessages()
-    {
-        if (_isLast)
-        {
-            _waveSpawner.FinishWave();
-            return;
-        }
-
-        _waveSpawner.UpdateWaveProgress();
-    }
 
     private void Destroy()
     {
-        SendMessages();
         _money.AddMoney(_enemyData.Cost);
         _killAction(this);
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Money : MonoBehaviour
 {
-    public int CurrentBalance { get; private set; } = 400;
+    public int CurrentBalance { get; private set; } = 800;
 
     public event Action<int> OnBalanceUpdate;
 

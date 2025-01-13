@@ -4,13 +4,12 @@ using Zenject;
 
 public class Base : MonoBehaviour, IDamageable
 {
-    [SerializeField] private float _maxHealth;
-
     [SerializeField] private Vector2 _screenCenter = Vector2.zero;
     [SerializeField] private float _enemyDetectionRadius;
     [SerializeField] private LayerMask _enemyLayer;
 
     private GlobalStats _globalStats;
+    private WaveSpawner _spawner;
     private float _currentHealth;
     private float _currentMaxHealth;
 
@@ -21,22 +20,25 @@ public class Base : MonoBehaviour, IDamageable
     public float CurrentHealth => _currentHealth;
 
     [Inject]
-    public void Construct(GlobalStats stats) 
+    public void Construct(GlobalStats stats, WaveSpawner spawner) 
     {
         _globalStats = stats;
-        _currentMaxHealth = _maxHealth + _globalStats.GetStat(StatType.BaseHealth).CurrentValue;
+        _currentMaxHealth = _globalStats.GetStat(StatType.BaseHealth).CurrentValue;
         _currentHealth = _currentMaxHealth;
+        _spawner = spawner;
+        OnHealthUpdate?.Invoke(_currentHealth, _currentMaxHealth);
     }
 
     public void IncreaseMaxHealth()
     {
-        _currentMaxHealth = _maxHealth + _globalStats.GetStat(StatType.BaseHealth).CurrentValue;
+        _currentMaxHealth = _globalStats.GetStat(StatType.BaseHealth).CurrentValue;
         OnHealthUpdate?.Invoke(_currentHealth, _currentMaxHealth);
     }
 
     public void Restart()
     {
         _currentHealth = _currentMaxHealth;
+        OnHealthUpdate?.Invoke(_currentHealth, _currentMaxHealth);
     }
 
     public void TakeDamage(float damage)
@@ -79,6 +81,7 @@ public class Base : MonoBehaviour, IDamageable
 
     private void Destroy()
     {
+        _spawner.Stop();
         OnBaseDestroyed?.Invoke();
     }
 

@@ -17,6 +17,7 @@ public class SceneInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
+        _stats.SetUp();
         Container.BindInterfacesAndSelfTo<GlobalStats>().FromInstance(_stats).AsSingle();
         Container.BindInterfacesAndSelfTo<InputReader>().FromInstance(_inputReader).AsSingle();
         Container.BindInterfacesAndSelfTo<MergeGrid>().FromInstance(_mergeGrid).AsSingle();

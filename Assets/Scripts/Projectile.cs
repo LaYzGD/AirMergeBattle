@@ -44,7 +44,7 @@ public class Projectile : MonoBehaviour
         _enemyLayer = enemyLayer;
         _isAutoAiming = data.IsAutoAiming;
         transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        _rotationSpeed = data.RotationSpeed;
+        _rotationSpeed = data.RotationSpeed + (data.RotationSpeed * _globalStats.GetStat(StatType.ProjectileSpeed).CurrentValue);
     }
 
     public void SetKillAction(Action<Projectile> killAction)
@@ -58,17 +58,28 @@ public class Projectile : MonoBehaviour
 
         if (_isAutoAiming)
         {
-            _target = _playerBase.GetClosestEnemy();
-            if (_target != null)
-            {
-                StartCoroutine(FollowTarget());
-                return;
-            }
-
-            _destroyAction(this);
+            FindTarget(true);
         }
 
         _rigidBody2D.linearVelocityY = _movementSpeed;
+    }
+
+    private void FindTarget(bool simpleKill)
+    {
+        _target = _playerBase.GetClosestEnemy();
+        if (_target != null)
+        {
+            StartCoroutine(FollowTarget());
+            return;
+        }
+
+        if (simpleKill)
+        {
+            _destroyAction(this);
+            return;
+        }
+
+        Destroy();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -110,7 +121,7 @@ public class Projectile : MonoBehaviour
             yield return null;
         }
 
-        Destroy();
+        FindTarget(false);
     }
 
     private void Destroy()

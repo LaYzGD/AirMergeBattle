@@ -4,7 +4,6 @@ using Zenject;
 
 public class ItemBoxPool : MonoBehaviour
 {
-    [SerializeField] private float _silverDropChance = 0.1f;
     [SerializeField] private ItemBox _boxPrefab;
     [SerializeField] private ItemBoxType _wooden, _silver, _gold;
 
@@ -35,14 +34,18 @@ public class ItemBoxPool : MonoBehaviour
 
         var box = _boxPool.Get();
         box.transform.position = validator.cellPos;
-        box.Initialize((Cell)validator.cell, isGolden ? _gold : (Random.Range(0f, 1f) < _silverDropChance ? _silver : _wooden), KillAction);
+        var currentBox = _wooden;
+        if (Random.Range(0f, 1f) < _globalStats.GetStat(StatType.SilverBoxDropChance).CurrentValue)
+        {
+            currentBox = _silver;
+        }
+        if (isGolden)
+        {
+            currentBox = _gold;
+        }
+        box.Initialize((Cell)validator.cell, currentBox, KillAction);
         validator.cell.SetItemFlag(true);
         return true;
-    }
-
-    public void IncreaseSilverBoxDropChance()
-    {
-        _silverDropChance = _globalStats.GetStat(StatType.SilverBoxDropChance).CurrentValue;
     }
     
     private void KillAction(ItemBox box)
