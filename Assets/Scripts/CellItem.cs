@@ -2,7 +2,7 @@ using UnityEngine;
 using Zenject;
 
 [RequireComponent(typeof(ZenAutoInjecter))]
-public class CellItem : MonoBehaviour
+public class CellItem : MonoBehaviour, IDragable
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private ItemShoot _itemShoot;
@@ -11,6 +11,8 @@ public class CellItem : MonoBehaviour
     private PlacementGrid _placementGrid;
     private InputReader _inputReader;
     private ICell _currentCell;
+
+    private bool _isDragging;
 
     public TurretType TurretType { get; private set; }
 
@@ -38,21 +40,36 @@ public class CellItem : MonoBehaviour
         }
     }
 
-    private void OnMouseDown()
+    public void OnDragStart()
     {
         _currentCell.RemoveItem();
         Activate(false);
         transform.SetParent(null);
+        _isDragging = true;
     }
 
-    private void OnMouseDrag()
+    public void OnDrag()
     {
         transform.position = _inputReader.MousePosition;
     }
 
-    private void OnMouseUp() 
+    private void Update()
     {
+        if (_isDragging)
+        {
+            OnDrag();
+        }
+    }
+
+    public void OnDragEnd() 
+    {
+        if (!_isDragging)
+        {
+            return;
+        }
+
         var placementValidator = _placementGrid.ValidateDrop(_inputReader.MousePosition);
+        _isDragging = false;
 
         if (placementValidator.flag)
         {

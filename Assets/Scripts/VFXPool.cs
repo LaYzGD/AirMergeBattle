@@ -4,18 +4,18 @@ using UnityEngine.Pool;
 
 public class VFXPool : MonoBehaviour
 {
-    private Dictionary<VFXObjectType, ObjectPool<VFXObject>> _pools = new ();
+    private Dictionary<VFXObjectData, ObjectPool<VFXObject>> _pools = new ();
 
-    public void CreatePool(VFXObjectType type, VFXObject prefab)
+    public void CreatePool(VFXObjectData type)
     {
-        _pools.Add(type, new ObjectPool<VFXObject>(() => Instantiate(prefab), (vfx) => vfx.gameObject.SetActive(true), (vfx) => vfx.gameObject.SetActive(false), (vfx) => Destroy(vfx.gameObject), false));
+        _pools.Add(type, new ObjectPool<VFXObject>(() => Instantiate(type.Prefab), (vfx) => vfx.gameObject.SetActive(true), (vfx) => vfx.gameObject.SetActive(false), (vfx) => Destroy(vfx.gameObject), false));
     }
 
-    public void SpawnVFX(VFXObjectType type, Vector2 position, VFXObject prefab)
+    public void SpawnVFX(VFXObjectData type, Vector2 position)
     {
         if (!_pools.ContainsKey(type)) 
         {
-            CreatePool(type, prefab);
+            CreatePool(type);
         }
 
         var pool = _pools[type];
@@ -25,7 +25,7 @@ public class VFXPool : MonoBehaviour
         vfx.Play();
     }
 
-    private void OnVFXStop(VFXObjectType type, VFXObject vfx)
+    private void OnVFXStop(VFXObjectData type, VFXObject vfx)
     {
         if (!_pools.ContainsKey(type))
         {

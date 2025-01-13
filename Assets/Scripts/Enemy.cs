@@ -74,7 +74,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private void Destroy()
     {
         _money.AddMoney(_enemyData.Cost);
-        _vfxPool.SpawnVFX(_vfxData.VFXType, transform.position, _vfxData.Prefab);
+        _vfxPool.SpawnVFX(_vfxData, transform.position);
         _audioPlayer.PlaySound(_destroySound, _destroySoundVolume);
         _killAction(this);
     }

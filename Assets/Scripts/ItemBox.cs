@@ -5,7 +5,7 @@ using UnityEngine;
 using Zenject;
 
 [RequireComponent(typeof(ZenAutoInjecter))]
-public class ItemBox : MonoBehaviour
+public class ItemBox : MonoBehaviour, IClickable
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private AudioClip _boxClickSound;
@@ -32,7 +32,7 @@ public class ItemBox : MonoBehaviour
         _onDestroy = killAction;
     }
 
-    private void OnMouseDown()
+    public void OnClick()
     {
         SpawnRandomItem();
         _audioPlayer.PlaySound(_boxClickSound, _boxClickSoundVolume);

@@ -22,16 +22,42 @@ public class InputReader : MonoBehaviour
         _onSelectAction = _playerInput.actions[_selectActionName];
         _onClickAction= _playerInput.actions[_clickActionName];
 
-        _onClickAction.performed += OnClick;
+        _onClickAction.started += OnClickStarted;
+        _onClickAction.canceled += OnClickCanceled;
+        _onClickAction.performed += OnClickPerformed;
     }
 
-    private void OnClick(InputAction.CallbackContext context)
+    private void OnClickStarted(InputAction.CallbackContext context)
     {
-        Click?.Invoke();
+        var raycastHit = Physics2D.Raycast(MousePosition, Vector2.zero, Mathf.Infinity);
+        if (raycastHit.collider != null && raycastHit.collider.TryGetComponent(out IDragable dragable))
+        {
+            dragable.OnDragStart();
+        }
+    }
+
+    private void OnClickPerformed(InputAction.CallbackContext context)
+    {
+        var raycastHit = Physics2D.Raycast(MousePosition, Vector2.zero, Mathf.Infinity);
+        if (raycastHit.collider != null && raycastHit.collider.TryGetComponent(out IClickable clickable))
+        {
+            clickable.OnClick();
+        }
+    }
+
+    private void OnClickCanceled(InputAction.CallbackContext context) 
+    {
+        var raycastHit = Physics2D.Raycast(MousePosition, Vector2.zero, Mathf.Infinity);
+        if (raycastHit.collider != null && raycastHit.collider.TryGetComponent(out IDragable dragable))
+        {
+            dragable.OnDragEnd();
+        }
     }
 
     private void OnDestroy()
     {
-        _onClickAction.performed -= OnClick;
+        _onClickAction.started -= OnClickStarted;
+        _onClickAction.canceled -= OnClickCanceled;
+        _onClickAction.performed -= OnClickPerformed;
     }
 }

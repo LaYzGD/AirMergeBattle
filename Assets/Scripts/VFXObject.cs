@@ -5,12 +5,12 @@ using UnityEngine;
 public class VFXObject : MonoBehaviour
 {
     [SerializeField] private ParticleSystem _particleSystem;
-    private Action<VFXObjectType, VFXObject> _action;
-    public VFXObjectType Type { get; private set; }
-
-    public void Init(VFXObjectType type, Action<VFXObjectType, VFXObject> action)
+    private Action<VFXObjectData, VFXObject> _action;
+    public VFXObjectData Type { get; private set; }
+    public void Init(VFXObjectData type, Action<VFXObjectData, VFXObject> action)
     {
         _action = action;
+        Type = type;
     }
 
     public void Play()

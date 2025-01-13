@@ -46,7 +46,7 @@ public class Cell : MonoBehaviour, ICell
 
     public bool CanPlaceItem(CellItem item)
     {
-        if (_cellItem != null && (_cellItem.TurretType != item.TurretType || _cellItem.TurretType.NextUpgrade == null))
+        if (_cellItem != null && (_cellItem == item || _cellItem.TurretType != item.TurretType || _cellItem.TurretType.NextUpgrade == null))
         {
             return false;
         }
@@ -80,7 +80,7 @@ public class Cell : MonoBehaviour, ICell
         _cellItem = item;
         var nextUpgrade = _cellItem.TurretType.NextUpgrade;
         _cellItem.transform.position = _cellItemOrigin.position;
-        _vFXPool.SpawnVFX(_vfxData.VFXType, _cellItemOrigin.position, _vfxData.Prefab);
+        _vFXPool.SpawnVFX(_vfxData, _cellItemOrigin.position);
         _cellItem.transform.SetParent(transform);
         _cellItem.SetType(nextUpgrade);
         SetItemFlag(true);

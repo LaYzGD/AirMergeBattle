@@ -149,7 +149,7 @@ public class Projectile : MonoBehaviour
             }
         }
 
-        _vfxPool.SpawnVFX(_vfxData.VFXType, transform.position, _vfxData.Prefab);
+        _vfxPool.SpawnVFX(_vfxData, transform.position);
 
         if (hasSound)
         {
