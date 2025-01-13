@@ -12,7 +12,7 @@ public class InputReader : MonoBehaviour
     private PlayerInput _playerInput;
     private InputAction _onSelectAction;
     private InputAction _onClickAction;
-    public event Action Click;
+    //public event Action Click;
 
     public Vector2 MousePosition => _mainCam.ScreenToWorldPoint(_onSelectAction.ReadValue<Vector2>());
 
@@ -22,18 +22,8 @@ public class InputReader : MonoBehaviour
         _onSelectAction = _playerInput.actions[_selectActionName];
         _onClickAction= _playerInput.actions[_clickActionName];
 
-        _onClickAction.started += OnClickStarted;
         _onClickAction.canceled += OnClickCanceled;
         _onClickAction.performed += OnClickPerformed;
-    }
-
-    private void OnClickStarted(InputAction.CallbackContext context)
-    {
-        var raycastHit = Physics2D.Raycast(MousePosition, Vector2.zero, Mathf.Infinity);
-        if (raycastHit.collider != null && raycastHit.collider.TryGetComponent(out IDragable dragable))
-        {
-            dragable.OnDragStart();
-        }
     }
 
     private void OnClickPerformed(InputAction.CallbackContext context)
@@ -43,6 +33,11 @@ public class InputReader : MonoBehaviour
         {
             clickable.OnClick();
         }
+        if (raycastHit.collider != null && raycastHit.collider.TryGetComponent(out IDragable dragable))
+        {
+            dragable.OnDragStart();
+        }
+        //Click?.Invoke();
     }
 
     private void OnClickCanceled(InputAction.CallbackContext context) 
@@ -56,7 +51,6 @@ public class InputReader : MonoBehaviour
 
     private void OnDestroy()
     {
-        _onClickAction.started -= OnClickStarted;
         _onClickAction.canceled -= OnClickCanceled;
         _onClickAction.performed -= OnClickPerformed;
     }

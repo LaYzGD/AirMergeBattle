@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Zenject;
 
 [RequireComponent(typeof(ZenAutoInjecter))]
@@ -58,6 +59,23 @@ public class CellItem : MonoBehaviour, IDragable
         if (_isDragging)
         {
             OnDrag();
+
+#if UNITY_EDITOR
+            if (!Mouse.current.leftButton.isPressed)
+            {
+                OnDragEnd();
+            }
+#else
+        if (Touchscreen.current != null)
+        {
+            var touchPhase = Touchscreen.current.primaryTouch.phase.ReadValue();
+            if (touchPhase == UnityEngine.InputSystem.TouchPhase.Ended || 
+                touchPhase == UnityEngine.InputSystem.TouchPhase.Canceled)
+            {
+                OnDragEnd();
+            }
+        }
+#endif
         }
     }
 

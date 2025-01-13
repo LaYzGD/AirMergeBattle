@@ -46,7 +46,7 @@ public class Cell : MonoBehaviour, ICell
 
     public bool CanPlaceItem(CellItem item)
     {
-        if (_cellItem != null && (_cellItem == item || _cellItem.TurretType != item.TurretType || _cellItem.TurretType.NextUpgrade == null))
+        if (_cellItem != null && (_cellItem.TurretType != item.TurretType || _cellItem.TurretType.NextUpgrade == null))
         {
             return false;
         }

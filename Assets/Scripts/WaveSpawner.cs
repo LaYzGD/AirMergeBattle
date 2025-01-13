@@ -97,6 +97,7 @@ public class WaveSpawner : MonoBehaviour
             {
                 _enemyPool.Release(enemy);
             }
+            _activeEnemies.Clear();
         }
     }
 
@@ -143,7 +144,6 @@ public class WaveSpawner : MonoBehaviour
     {
         _enemyPool.Release(enemy);
 
-        _activeEnemies.Remove(enemy);
         _destroyedEnemies++;
         OnWaveProgressUpdate?.Invoke(_destroyedEnemies);
 
