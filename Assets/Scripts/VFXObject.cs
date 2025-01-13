@@ -6,7 +6,7 @@ public class VFXObject : MonoBehaviour
 {
     [SerializeField] private ParticleSystem _particleSystem;
     private Action<VFXObjectType, VFXObject> _action;
-    private VFXObjectType _type;
+    public VFXObjectType Type { get; private set; }
 
     public void Init(VFXObjectType type, Action<VFXObjectType, VFXObject> action)
     {
@@ -20,7 +20,7 @@ public class VFXObject : MonoBehaviour
 
     private void OnParticleSystemStopped()
     {
-        _action(_type, this);
+        _action(Type, this);
     }
 }
 

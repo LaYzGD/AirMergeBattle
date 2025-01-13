@@ -27,6 +27,12 @@ public class VFXPool : MonoBehaviour
 
     private void OnVFXStop(VFXObjectType type, VFXObject vfx)
     {
+        if (!_pools.ContainsKey(type))
+        {
+            Destroy(vfx.gameObject);
+            return;
+        }
+
         var pool = _pools[type];
         pool.Release(vfx);
     }
