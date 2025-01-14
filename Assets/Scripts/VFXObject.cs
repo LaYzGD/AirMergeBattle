@@ -30,5 +30,6 @@ public enum VFXObjectType
     ProjectileExplosion,
     BigExplosion,
     PlaneExplosion,
-    Merge
+    Merge,
+    BoxOpen
 }

@@ -70,6 +70,10 @@ public class Enemy : MonoBehaviour, IDamageable
         }
     }
 
+    public void Remove() 
+    {
+        _killAction(this);
+    }
 
     private void Destroy()
     {

@@ -29,7 +29,9 @@ public class WaveSpawner : MonoBehaviour
 
     public int CurrentWaveNumber => _currentWaveNumber;
 
-    public event Action<int> OnWaveFinished;
+    public event Action<int> OnWaveCompleted;
+    public event Action OnWaveFinished;
+    public event Action OnWaveStarted;
     public event Action<int> OnWaveProgressUpdate;
     public event Action<int> OnWaveConfigured;
 
@@ -80,6 +82,7 @@ public class WaveSpawner : MonoBehaviour
         }
 
         StartCoroutine(SpawnWaveCoroutine());
+        OnWaveStarted?.Invoke();
     }
 
     public void RestartCurrentWave()
@@ -95,7 +98,7 @@ public class WaveSpawner : MonoBehaviour
         {
             foreach (var enemy in _activeEnemies)
             {
-                _enemyPool.Release(enemy);
+                enemy.Remove();
             }
             _activeEnemies.Clear();
         }
@@ -107,6 +110,7 @@ public class WaveSpawner : MonoBehaviour
         _waveIsConfigured = false;
 
         RemoveActiveEnemies();
+        OnWaveFinished?.Invoke();
     }
 
     public void FinishWave()
@@ -118,7 +122,8 @@ public class WaveSpawner : MonoBehaviour
         }
         _currentWaveNumber++;
         _waveIsConfigured = false;
-        OnWaveFinished?.Invoke(_currentWaveNumber);
+        OnWaveFinished?.Invoke();
+        OnWaveCompleted?.Invoke(_currentWaveNumber);
     }
 
     private IEnumerator SpawnWaveCoroutine()

@@ -16,6 +16,7 @@ public class SceneInstaller : MonoInstaller
     [SerializeField] private PurchaseHandler _purchaseHandler;
     [SerializeField] private AudioPlayer _audioPlayer;
     [SerializeField] private VFXPool _vFXPool;
+    [SerializeField] private Animations _animations;
 
     public override void InstallBindings()
     {
@@ -33,5 +34,6 @@ public class SceneInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<PurchaseHandler>().FromInstance(_purchaseHandler).AsSingle();
         Container.BindInterfacesAndSelfTo<AudioPlayer>().FromInstance(_audioPlayer).AsSingle();
         Container.BindInterfacesAndSelfTo<VFXPool>().FromInstance(_vFXPool).AsSingle();
+        Container.BindInterfacesAndSelfTo<Animations>().FromInstance(_animations).AsSingle();
     }
 }

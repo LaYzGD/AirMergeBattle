@@ -183,6 +183,7 @@ MonoBehaviour:
     m_Bits: 256
   _shootingSound: {fileID: 8300000, guid: 1c603117f3ecbef4ba42575eaa8406de, type: 3}
   _shootingSoundVolume: 0.4
+  _animationData: {fileID: 11400000, guid: 96111251ffd6b764ab80a99fc91c504b, type: 2}
 --- !u!1 &5323617907361714002
 GameObject:
   m_ObjectHideFlags: 0

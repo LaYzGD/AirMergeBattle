@@ -23,15 +23,18 @@ public class ItemShoot : MonoBehaviour
     private Coroutine _coroutine;
     private GlobalStats _globalStats;
     private AudioPlayer _audioPlayer;
-
+    private WaveSpawner _spawner;
     private TurretType _turretType;
 
     [Inject]
-    public void Construct(ProjectilePool pool, GlobalStats stats, AudioPlayer audioPlayer)
+    public void Construct(ProjectilePool pool, GlobalStats stats, AudioPlayer audioPlayer, WaveSpawner spawner)
     {
         _projectilePool = pool;
         _globalStats = stats;
         _audioPlayer = audioPlayer;
+        _spawner = spawner;
+        _spawner.OnWaveStarted += ContinueShooting;
+        _spawner.OnWaveFinished += PauseShooting;
     }
 
     public void Init(TurretType type)
@@ -50,7 +53,17 @@ public class ItemShoot : MonoBehaviour
         _coroutine = StartCoroutine(Shoot());
     }
 
-    public void StopShooting()
+    private void ContinueShooting()
+    {
+        if (_coroutine == null)
+        {
+            return;
+        }
+
+        StartShooting();
+    }
+
+    private void PauseShooting()
     {
         if (_coroutine == null)
         {
@@ -60,12 +73,26 @@ public class ItemShoot : MonoBehaviour
         StopCoroutine(_coroutine);
     }
 
+    public void StopShooting()
+    {
+        if (_coroutine == null)
+        {
+            return;
+        }
+
+        StopCoroutine(_coroutine);
+        _coroutine = null;
+    }
+
     private IEnumerator Shoot()
     {
         while (true) 
         {
             var shootingDelay = _shootingDelay - (_turretType.ShootingDelay * _globalStats.GetStat(StatType.StructureDelay).CurrentValue);
             var damage = _damage + (_turretType.Damage * _globalStats.GetStat(StatType.StructureDamage).CurrentValue);
+
+            yield return new WaitForSecondsRealtime(shootingDelay);
+
             _audioPlayer.PlaySound(_shootingSound, _shootingSoundVolume);
 
             for (int i = 0; i < _projectileAmount; i++)
@@ -75,8 +102,6 @@ public class ItemShoot : MonoBehaviour
                 projectile.Initialize(_projectileData, damage, _enemyLayer);
                 projectile.StartMovement();
             }
-
-            yield return new WaitForSecondsRealtime(shootingDelay);
         }
     }
 

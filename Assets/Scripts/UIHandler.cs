@@ -15,7 +15,7 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private Slider _waveProgress;
     [SerializeField] private Slider _baseHealth;
     [SerializeField] private Slider _goldenChestProgress;
-    [SerializeField] private GameObject _claimChestButton;
+    [SerializeField] private Button _claimChestButton;
     [Space]
     [SerializeField] private GameObject _waveWinScreen;
     [SerializeField] private GameObject _waveLoseScreen;
@@ -51,7 +51,7 @@ public class UIHandler : MonoBehaviour
     {
         _money.OnBalanceUpdate += UpdateBalanceUI;
         _purchaseHandler.OnStatChanged += UpdateStatsUI;
-        _waveSpawner.OnWaveFinished += ShowFinishWaveView;
+        _waveSpawner.OnWaveCompleted += ShowFinishWaveView;
         _waveSpawner.OnWaveProgressUpdate += UpdateWaveProgress;
         _waveSpawner.OnWaveConfigured += ConfigureWave;
         _playerBase.OnBaseDestroyed += ShowWaveLoseScreen;
@@ -106,9 +106,9 @@ public class UIHandler : MonoBehaviour
         _chestProgress++;
         if (_chestProgress == _goldenChestProgress.maxValue)
         {
-            _claimChestButton.SetActive(true);
+            _claimChestButton.image.color = Color.white;
+            _claimChestButton.interactable = true;
             _chestProgress = 0;
-            _goldenChestProgress.gameObject.SetActive(false);
         }
 
         _goldenChestProgress.value = _chestProgress;
@@ -152,16 +152,7 @@ public class UIHandler : MonoBehaviour
 
     public void OnCreateBoxButtonClick() 
     {
-        var isBoxBought = _purchaseHandler.TryBuyBox();
-
-        if (isBoxBought) 
-        {
-            //Play Sound
-
-            return;
-        }
-
-        //Play sound
+        _purchaseHandler.TryBuyBox();
     }
 
     public void OnClaimGoldenBoxButtonClick()
@@ -170,13 +161,10 @@ public class UIHandler : MonoBehaviour
 
         if (isGoldenBoxSpawned)
         {
-            _claimChestButton.gameObject.SetActive(false);
-            _goldenChestProgress.gameObject.SetActive(true);
-            //Play sound
+            _claimChestButton.image.color = Color.black;
+            _claimChestButton.interactable = false;
             return;
         }
-
-        //play sound
     }
 
     public void OnBuyChestUpgrade() 
@@ -211,17 +199,7 @@ public class UIHandler : MonoBehaviour
 
     private bool BuyUpgrade(StatType type)
     {
-        var isUpgradeBought = _purchaseHandler.TryBuyUpgrade(type);
-
-        if (isUpgradeBought) 
-        {
-            //Play Sound
-
-            return true;
-        }
-
-        //Play Sound
-        return false;
+        return _purchaseHandler.TryBuyUpgrade(type);
     }
 
     public void OnWaveRestart()
@@ -239,7 +217,7 @@ public class UIHandler : MonoBehaviour
     {
         _money.OnBalanceUpdate -= UpdateBalanceUI;
         _purchaseHandler.OnStatChanged -= UpdateStatsUI;
-        _waveSpawner.OnWaveFinished -= ShowFinishWaveView;
+        _waveSpawner.OnWaveCompleted -= ShowFinishWaveView;
         _waveSpawner.OnWaveProgressUpdate -= UpdateWaveProgress;
         _waveSpawner.OnWaveConfigured -= ConfigureWave;
         _playerBase.OnBaseDestroyed -= ShowWaveLoseScreen;

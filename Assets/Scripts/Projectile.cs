@@ -89,8 +89,7 @@ public class Projectile : MonoBehaviour
             _destroyAction(this);
             return;
         }
-
-        Destroy();
+        //Destroy();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

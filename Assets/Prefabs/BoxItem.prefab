@@ -151,6 +151,8 @@ MonoBehaviour:
   _spriteRenderer: {fileID: 7694680273406894502}
   _boxClickSound: {fileID: 8300000, guid: 2897c0f7815897a438404e5ad2ddb3b5, type: 3}
   _boxClickSoundVolume: 1
+  _animationData: {fileID: 11400000, guid: 820b3fe0a9e70214d879cfc5247c6510, type: 2}
+  _vfxData: {fileID: 11400000, guid: e5ac4ce805245c84db468d833275b33c, type: 2}
 --- !u!114 &-468885443586247844
 MonoBehaviour:
   m_ObjectHideFlags: 0
