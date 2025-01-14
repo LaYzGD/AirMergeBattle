@@ -89,7 +89,9 @@ public class Projectile : MonoBehaviour
             _destroyAction(this);
             return;
         }
-        //Destroy();
+
+        _rigidBody2D.angularVelocity = 0f;
+        _rigidBody2D.linearVelocity = transform.up * _movementSpeed;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

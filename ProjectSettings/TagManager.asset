@@ -14,7 +14,7 @@ TagManager:
   - Turret
   - Projectile
   - Enemy
-  - 
+  - PP
   - 
   - 
   - 
@@ -49,6 +49,9 @@ TagManager:
     locked: 0
   - name: Effects
     uniqueID: 2474950651
+    locked: 0
+  - name: UI
+    uniqueID: 3007816187
     locked: 0
   m_RenderingLayers:
   - Default

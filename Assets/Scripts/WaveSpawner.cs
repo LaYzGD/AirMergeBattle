@@ -122,6 +122,7 @@ public class WaveSpawner : MonoBehaviour
         }
         _currentWaveNumber++;
         _waveIsConfigured = false;
+        StopAllCoroutines();
         OnWaveFinished?.Invoke();
         OnWaveCompleted?.Invoke(_currentWaveNumber);
     }
@@ -134,7 +135,13 @@ public class WaveSpawner : MonoBehaviour
             var randomEnemy = enemyTypes[UnityEngine.Random.Range(0, enemyTypes.Length)];
             if (_currentWaveEnemies.TryGetValue(randomEnemy, out int value))
             {
-                SpawnEnemy(new Vector2(_enemiesSpawnPoint.position.x, _enemiesSpawnPoint.position.y + (UnityEngine.Random.Range(-1f, 1f) * _yPositionThreshold)), randomEnemy, i == _allCurrentWaveEnemiesAmount - 1);
+                var spawnPos = new Vector2(_enemiesSpawnPoint.position.x, _enemiesSpawnPoint.position.y + (UnityEngine.Random.Range(-1f, 1f) * _yPositionThreshold));
+                if (i == _allCurrentWaveEnemiesAmount - 1)
+                {
+                    spawnPos = new Vector2(_enemiesSpawnPoint.position.x, _enemiesSpawnPoint.position.y + _yPositionThreshold);
+                    yield return new WaitForSecondsRealtime(_currentWave.DelayBetweenSpawn);
+                }
+                SpawnEnemy(spawnPos, randomEnemy, i == _allCurrentWaveEnemiesAmount - 1);
                 value--;
                 if (value == 0)
                 {
