@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eadac7f310f662f4ca80cd18912606f5, type: 3}
   m_Name: RocketLauncher_2
   m_EditorClassIdentifier: 
+  <Index>k__BackingField: 15
   <Sprite>k__BackingField: {fileID: 3909156769175491390, guid: 27439327761dc1f4ca9846e637a0d381, type: 3}
   <NextUpgrade>k__BackingField: {fileID: 11400000, guid: d7ac0935a1e323e4ba3f9eb253bf5c7f, type: 2}
   <ProjectileData>k__BackingField: {fileID: 11400000, guid: 47273ddf2660b1245b67016cd2b8b24a, type: 2}

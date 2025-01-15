@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eadac7f310f662f4ca80cd18912606f5, type: 3}
   m_Name: MachineGun_3
   m_EditorClassIdentifier: 
+  <Index>k__BackingField: 10
   <Sprite>k__BackingField: {fileID: 4607925251135079888, guid: 1ddebcf44513e814386377302558b903, type: 3}
   <NextUpgrade>k__BackingField: {fileID: 11400000, guid: 3beb8ff94ad32b24cb919809bf678b56, type: 2}
   <ProjectileData>k__BackingField: {fileID: 11400000, guid: 1d5de106d8b5f93478edac49c4b95f5e, type: 2}
+  <DistanceBetweenProjectiles>k__BackingField: 0.2
   <ShootingDelay>k__BackingField: 1.5
   <ProjectilesAmount>k__BackingField: 3
   <Damage>k__BackingField: 3

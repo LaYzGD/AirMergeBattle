@@ -10,6 +10,13 @@ public class GlobalStats : MonoBehaviour
     {
         foreach (Stat stat in _allStats) 
         {
+            var currentStat = SaveAndLoad.LoadStat(stat.Type);
+            if (currentStat != null)
+            {
+                stat.Set(currentStat.CurrentValue);
+                continue;
+            }
+        
             stat.Set(stat.BaseValue);
         }
     }
@@ -33,6 +40,7 @@ public class GlobalStats : MonoBehaviour
         }
 
         stat.Set(newValue);
+        SaveAndLoad.SaveStat(stat);
     }
 
     public Stat GetStat(StatType type) 

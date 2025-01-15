@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
+using Zenject;
 
 public class WaveSpawner : MonoBehaviour
 {
@@ -26,7 +27,6 @@ public class WaveSpawner : MonoBehaviour
     private List<Enemy> _activeEnemies;
 
     public int CurrentReward { get; private set; }
-
     public int CurrentWaveNumber => _currentWaveNumber;
 
     public event Action<int> OnWaveCompleted;
@@ -36,11 +36,27 @@ public class WaveSpawner : MonoBehaviour
     public event Action<int> OnWaveConfigured;
 
 
-    private void Start()
+    private void Awake()
     {
         _enemyPool = new ObjectPool<Enemy>(OnCreate, OnGet, OnRelease, OnEnemyDestroy, false);
 
+        Load();
+    }
+
+    private void Start()
+    {
         SpawnWave();
+    }
+
+    private void Load()
+    {
+        var waveInfo = SaveAndLoad.LoadWaveInfo();
+        if (waveInfo == null)
+        {
+            return;
+        }
+        _currentWaveIndex = waveInfo.WaveIndex;
+        _currentWaveNumber = waveInfo.WaveNumber;
     }
 
     private void ConfigureWave()
@@ -123,6 +139,7 @@ public class WaveSpawner : MonoBehaviour
         _currentWaveNumber++;
         _waveIsConfigured = false;
         StopAllCoroutines();
+        SaveAndLoad.SaveWaveInfo(new WaveInformation(_currentWaveNumber, _currentWaveIndex));
         OnWaveFinished?.Invoke();
         OnWaveCompleted?.Invoke(_currentWaveNumber);
     }

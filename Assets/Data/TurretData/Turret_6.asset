@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eadac7f310f662f4ca80cd18912606f5, type: 3}
   m_Name: Turret_6
   m_EditorClassIdentifier: 
+  <Index>k__BackingField: 5
   <Sprite>k__BackingField: {fileID: 6414919442490113639, guid: fd8b32c4ed8ed234b808d1bd3477d218, type: 3}
   <NextUpgrade>k__BackingField: {fileID: 11400000, guid: 757cdc04148b3c54da5b6c783feb4e88, type: 2}
   <ProjectileData>k__BackingField: {fileID: 11400000, guid: 2b3b0d85d5d5ec64d8c551af6ee77af4, type: 2}
+  <DistanceBetweenProjectiles>k__BackingField: 0.2
   <ShootingDelay>k__BackingField: 0.5
   <ProjectilesAmount>k__BackingField: 2
   <Damage>k__BackingField: 5

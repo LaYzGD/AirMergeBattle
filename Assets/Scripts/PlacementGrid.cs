@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 public class PlacementGrid : MonoBehaviour
 {
@@ -7,6 +8,15 @@ public class PlacementGrid : MonoBehaviour
     [SerializeField] private PlacementCell _cellPrefab;
 
     private GridSystem<PlacementCell> _grid;
+    private CellItemsPool _pool;
+    private AllTurretUpgrades _allTurretUpgrades;
+
+    [Inject]
+    public void Construct(CellItemsPool pool, AllTurretUpgrades upgrades)
+    {
+        _pool = pool;
+        _allTurretUpgrades = upgrades;
+    }
 
     private void Start()
     {
@@ -15,19 +25,29 @@ public class PlacementGrid : MonoBehaviour
         InitializeGrid();
     }
 
-    private void FillGridCell(Vector2 pos)
+    private void FillGridCell(Vector2 pos, int index)
     {
         var cell = Instantiate(_cellPrefab);
         cell.transform.position = pos;
         cell.transform.SetParent(_origin);
+        cell.Init(index);
+        var cellInfo = SaveAndLoad.LoadCell(index, typeof(PlacementCell));
+        if (cellInfo != null && cellInfo.HasItem)
+        {
+            var item = _pool.GetItem();
+            item.Init(cell, _allTurretUpgrades.GetTurretByIndex(cellInfo.TurretIndex));
+            cell.PlaceItem(item);
+        }
         _grid.SetValue(pos, cell);
     }
 
     private void InitializeGrid()
     {
+        int index = 0;
         foreach (var cellPos in _grid.GetPositions())
         {
-            FillGridCell(cellPos);
+            FillGridCell(cellPos, index);
+            index++;
         }
     }
 

@@ -58,7 +58,10 @@ public class UIHandler : MonoBehaviour
         _playerBase.OnHealthUpdate += UpdateBaseInfo;
 
         UpdateBalanceUI(_money.CurrentBalance);
+        _chestProgress = SaveAndLoad.LoadChestValue();
+        UpdateBaseInfo(_playerBase.CurrentHealth, _playerBase.MaxHealth);
         _purchaseHandler.InitUpgradeInfo();
+        CheckItemsUnlock(_waveSpawner.CurrentWaveNumber);
     }
 
     private void UpdateBalanceUI(int balance)
@@ -110,7 +113,7 @@ public class UIHandler : MonoBehaviour
             _claimChestButton.interactable = true;
             _chestProgress = 0;
         }
-
+        SaveAndLoad.SaveChestInfo(_chestProgress);
         _goldenChestProgress.value = _chestProgress;
         CheckItemsUnlock(wave);
     }

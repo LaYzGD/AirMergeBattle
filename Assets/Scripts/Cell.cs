@@ -15,6 +15,9 @@ public class Cell : MonoBehaviour, ICell
     private AudioPlayer _audioPlayer;
     private VFXPool _vFXPool;
 
+    public int Index { get; private set; }
+    public CellItem CellItem => _cellItem;
+
     public bool HasItem { get; private set; } = false;
 
     [Inject]
@@ -25,9 +28,10 @@ public class Cell : MonoBehaviour, ICell
         _vFXPool = vfxPool;
     }
 
-    public void Init(Color color)
+    public void Init(Color color, int index)
     {
         _spriteRenderer.color = color;
+        Index = index;
     }
 
     public void CreateItem(TurretType type)
@@ -37,6 +41,7 @@ public class Cell : MonoBehaviour, ICell
         _cellItem.transform.SetParent(transform);
         _cellItem.Init(this, type);
         SetItemFlag(true);
+        SaveAndLoad.SaveCell(typeof(Cell), new CellInfo(HasItem, Index, _cellItem.TurretType.Index));
     }
 
     public void SetItemFlag(bool flag)
@@ -62,6 +67,7 @@ public class Cell : MonoBehaviour, ICell
             _cellItem.transform.position = _cellItemOrigin.position;
             _cellItem.transform.SetParent(transform);
             SetItemFlag(true);
+            SaveAndLoad.SaveCell(typeof(Cell), new CellInfo(HasItem, Index, _cellItem.TurretType.Index));
             return;
         }
 
@@ -85,5 +91,6 @@ public class Cell : MonoBehaviour, ICell
         _cellItem.SetType(nextUpgrade);
         SetItemFlag(true);
         _audioPlayer.PlaySound(_mergeSound, _mergeSoundVolume);
+        SaveAndLoad.SaveCell(typeof(Cell), new CellInfo(HasItem, Index, _cellItem.TurretType.Index));
     }
 }

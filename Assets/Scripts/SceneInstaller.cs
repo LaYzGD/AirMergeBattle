@@ -17,12 +17,14 @@ public class SceneInstaller : MonoInstaller
     [SerializeField] private AudioPlayer _audioPlayer;
     [SerializeField] private VFXPool _vFXPool;
     [SerializeField] private Animations _animations;
+    [SerializeField] private AllTurretUpgrades _allTurretUpgrades;
 
     public override void InstallBindings()
     {
         _stats.SetUp();
         Container.BindInterfacesAndSelfTo<GlobalStats>().FromInstance(_stats).AsSingle();
         Container.BindInterfacesAndSelfTo<InputReader>().FromInstance(_inputReader).AsSingle();
+        Container.BindInterfacesAndSelfTo<AllTurretUpgrades>().FromInstance(_allTurretUpgrades).AsSingle();
         Container.BindInterfacesAndSelfTo<MergeGrid>().FromInstance(_mergeGrid).AsSingle();
         Container.BindInterfacesAndSelfTo<PlacementGrid>().FromInstance(_placementGrid).AsSingle();
         Container.BindInterfacesAndSelfTo<CellItemsPool>().FromInstance(_cellItemsPool).AsSingle();

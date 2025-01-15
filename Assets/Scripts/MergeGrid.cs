@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 public class MergeGrid : MonoBehaviour
 {
@@ -9,6 +10,13 @@ public class MergeGrid : MonoBehaviour
     [SerializeField] private Cell _cellPrefab;
 
     private GridSystem<Cell> _grid;
+    private AllTurretUpgrades _allTurretUpgrades;
+
+    [Inject]
+    public void Construct(AllTurretUpgrades upgrades)
+    {
+        _allTurretUpgrades = upgrades;
+    }
 
     private void Start()
     {
@@ -17,24 +25,31 @@ public class MergeGrid : MonoBehaviour
         InitializeGrid();
     }
 
-    private void FillGridCell(Vector2 pos, int counter) 
+    private void FillGridCell(Vector2 pos, int counter, int index) 
     {
         var cell = Instantiate(_cellPrefab);
         cell.transform.position = pos;
         cell.transform.SetParent(_origin);
         cell.transform.localScale = Vector2.one * _mergeGridData.CellSize;
-        cell.Init(counter == 0 ? _cellWhiteColor : _cellBlackColor);
+        cell.Init(counter == 0 ? _cellWhiteColor : _cellBlackColor, index);
+        var cellInfo = SaveAndLoad.LoadCell(index, typeof(Cell));
+        if (cellInfo != null && cellInfo.HasItem)
+        {
+            cell.CreateItem(_allTurretUpgrades.GetTurretByIndex(cellInfo.TurretIndex));
+        }
         _grid.SetValue(pos, cell);
     }
 
     private void InitializeGrid()
     {
         int counter = 0;
+        int index = 0;
 
         foreach (var cellPos in _grid.GetPositions())
         {
-            FillGridCell(cellPos, counter);
+            FillGridCell(cellPos, counter, index);
             counter++;
+            index++;
             if (counter > 1)
             {
                 counter = 0;
