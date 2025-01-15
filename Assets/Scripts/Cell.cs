@@ -56,6 +56,11 @@ public class Cell : MonoBehaviour, ICell
             return false;
         }
 
+        if (HasItem && _cellItem == null)
+        {
+            return false;
+        }
+
         return true;
     }
 
