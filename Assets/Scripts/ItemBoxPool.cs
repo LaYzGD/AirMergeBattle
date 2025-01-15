@@ -49,7 +49,7 @@ public class ItemBoxPool : MonoBehaviour
         }
         box.Initialize((Cell)validator.cell, currentBox, KillAction);
         validator.cell.SetItemFlag(true);
-        SaveAndLoad.SaveCell(typeof(Cell), new CellInfo(validator.cell.HasItem, validator.cell.Index, -1, currentBox.Index));
+        SaveAndLoad.SaveCell(typeof(Cell), new CellInfo(true, validator.cell.Index, -1, currentBox.Index));
         return true;
     }
 
@@ -57,6 +57,7 @@ public class ItemBoxPool : MonoBehaviour
     {
         var box = _boxPool.Get();
         box.transform.position = cell.transform.position;
+        cell.SetItemFlag(true);
         box.Initialize(cell, _boxes.FirstOrDefault(b => b.Index == index), KillAction);
     }
     

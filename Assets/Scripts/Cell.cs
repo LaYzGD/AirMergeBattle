@@ -79,6 +79,7 @@ public class Cell : MonoBehaviour, ICell
     {
         _cellItem = null;
         SetItemFlag(false);
+        SaveAndLoad.SaveCell(typeof(Cell), new CellInfo(false, Index));
     }
 
     private void MergeItems(CellItem item)

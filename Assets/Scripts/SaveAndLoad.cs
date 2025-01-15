@@ -26,7 +26,6 @@ public static class SaveAndLoad
         {
             key = $"{_pCellKey}{info.CellIndex}";
         }
-
         _file.AddBinary(key, info);
     }
 

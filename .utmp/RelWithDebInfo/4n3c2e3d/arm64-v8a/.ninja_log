@@ -1,12 +1,23 @@
 # ninja log v5
+14	2554	7584610263446737	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	f6d702d8830e25ca
 55	496	7584610242972188	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	a3f31b48c4c1282b
 499	705	7584610245127590	C:/Work/MyProjects/Repo/AirMergeBattle/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4n3c2e3d/obj/arm64-v8a/libswappywrapper.so	74f58628f26619b
 35	1635	7584610254116248	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	a9912267cd9e4c6e
 22	1639	7584610254212261	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	64a404c7dede12f5
-8	1722	7584610255133462	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	6a4162fb0cd3460c
-49	1773	7584610255674747	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	618c4d828cb95565
 42	1811	7584610255991747	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	46fb9d64a7b03ec0
+8	1722	7584610255133462	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	6a4162fb0cd3460c
 1	1888	7584610256817180	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	9ed1f9828aef88e4
+49	1773	7584610255674747	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	618c4d828cb95565
 28	2242	7584610260229615	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	bd33a75a7629e221
-14	2554	7584610263446737	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	f6d702d8830e25ca
 2555	2719	7584610265231312	C:/Work/MyProjects/Repo/AirMergeBattle/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4n3c2e3d/obj/arm64-v8a/libgame.so	63877be2ed1f25c3
+70	458	7586493234527682	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	a3f31b48c4c1282b
+459	784	7586493237836501	C:/Work/MyProjects/Repo/AirMergeBattle/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4n3c2e3d/obj/arm64-v8a/libswappywrapper.so	74f58628f26619b
+59	1449	7586493244380943	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	a9912267cd9e4c6e
+36	1465	7586493244569706	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	64a404c7dede12f5
+43	1507	7586493244997713	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	6a4162fb0cd3460c
+48	1521	7586493245171288	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	618c4d828cb95565
+65	1630	7586493246270128	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	46fb9d64a7b03ec0
+16	1705	7586493247043282	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	9ed1f9828aef88e4
+54	1849	7586493248527404	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	bd33a75a7629e221
+24	1998	7586493249991580	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	f6d702d8830e25ca
+1998	2141	7586493251466846	C:/Work/MyProjects/Repo/AirMergeBattle/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4n3c2e3d/obj/arm64-v8a/libgame.so	63877be2ed1f25c3

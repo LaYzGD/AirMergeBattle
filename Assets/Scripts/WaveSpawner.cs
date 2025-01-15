@@ -61,6 +61,7 @@ public class WaveSpawner : MonoBehaviour
 
     private void ConfigureWave()
     {
+        SaveAndLoad.Load();
         _currentWave = _waves[_currentWaveIndex];
         _currentWaveEnemies = new Dictionary<EnemyData, int>();
         _activeEnemies = new List<Enemy>();

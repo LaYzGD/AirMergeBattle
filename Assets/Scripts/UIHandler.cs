@@ -61,6 +61,7 @@ public class UIHandler : MonoBehaviour
         _chestProgress = SaveAndLoad.LoadChestValue();
         UpdateBaseInfo(_playerBase.CurrentHealth, _playerBase.MaxHealth);
         _purchaseHandler.InitUpgradeInfo();
+        _waveText.text = $"Wave {_waveSpawner.CurrentWaveNumber}";
         CheckItemsUnlock(_waveSpawner.CurrentWaveNumber);
     }
 
@@ -116,6 +117,7 @@ public class UIHandler : MonoBehaviour
         SaveAndLoad.SaveChestInfo(_chestProgress);
         _goldenChestProgress.value = _chestProgress;
         CheckItemsUnlock(wave);
+        SaveAndLoad.Save();
     }
 
     private void UpdateBaseInfo(float currentHealth, float maxHealth)
@@ -133,6 +135,7 @@ public class UIHandler : MonoBehaviour
     private void ShowWaveLoseScreen()
     {
         _waveLoseScreen.gameObject.SetActive(true);
+        SaveAndLoad.Save();
     }
 
     private void UpdateWaveProgress(int progress)

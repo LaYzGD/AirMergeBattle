@@ -25,6 +25,6 @@ public class PlacementCell : MonoBehaviour, ICell
     public void RemoveItem()
     {
         _currentItem = null;
-        SaveAndLoad.SaveCell(typeof(PlacementCell), new CellInfo(HasItem, Index));
+        SaveAndLoad.SaveCell(typeof(PlacementCell), new CellInfo(false, Index));
     }
 }
