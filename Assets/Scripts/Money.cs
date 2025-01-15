@@ -11,6 +11,10 @@ public class Money : MonoBehaviour
     private void Awake()
     {
         CurrentBalance = SaveAndLoad.LoadMoney();
+        if (CurrentBalance <= 0)
+        {
+            CurrentBalance = 800;
+        }
     }
 
     public void AddMoney(int amount)

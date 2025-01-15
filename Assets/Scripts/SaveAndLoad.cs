@@ -10,10 +10,11 @@ public static class SaveAndLoad
     private const string _stat = "Stat_";
     private const string _goldenChest = "GoldenChest";
 
-    private static readonly EasyFileSave _file = new EasyFileSave();
+    private static EasyFileSave _file;
 
     public static bool Load()
     {
+        _file = new EasyFileSave();
         return _file.Load();
     }
 

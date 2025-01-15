@@ -10,8 +10,25 @@ public class ApplicationManager : MonoBehaviour
         Application.targetFrameRate = 60;
     }
 
-    private void OnApplicationQuit()
+    private void OnApplicationFocus(bool focus)
     {
-        SaveAndLoad.Save();
+        if (!focus)
+        {
+            SaveAndLoad.Save();
+            return;
+        }
+
+        SaveAndLoad.Load();
+    }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            SaveAndLoad.Save();
+            return;
+        }
+
+        SaveAndLoad.Load();
     }
 }
