@@ -16,9 +16,14 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private Slider _baseHealth;
     [SerializeField] private Slider _goldenChestProgress;
     [SerializeField] private Button _claimChestButton;
+    [SerializeField] private Image _muteImage;
+    [Space]
+    [SerializeField] private Sprite _mutedSprite;
+    [SerializeField] private Sprite _unmutedSprite;
     [Space]
     [SerializeField] private GameObject _waveWinScreen;
     [SerializeField] private GameObject _waveLoseScreen;
+    [SerializeField] private GameObject _powerUpsView;
     [Space]
     [SerializeField] private AudioClip _clickSound;
     [SerializeField] private float _clickSoundVolume;
@@ -32,11 +37,12 @@ public class UIHandler : MonoBehaviour
     private ItemBoxPool _itemBoxPool;
     private Base _playerBase;
     private AudioPlayer _audioPlayer;
+    private InputReader _inputReader;
 
     private int _chestProgress = 0;
 
     [Inject]
-    public void Construct(PurchaseHandler purchaseHandler, Money money, GlobalStats stats, WaveSpawner waveSpawner, ItemBoxPool pool, Base playerBase, AudioPlayer audioPlayer)
+    public void Construct(PurchaseHandler purchaseHandler, Money money, GlobalStats stats, WaveSpawner waveSpawner, ItemBoxPool pool, Base playerBase, AudioPlayer audioPlayer, InputReader reader)
     {
         _purchaseHandler = purchaseHandler;
         _money = money;
@@ -45,6 +51,7 @@ public class UIHandler : MonoBehaviour
         _itemBoxPool = pool;
         _playerBase = playerBase;
         _audioPlayer = audioPlayer;
+        _inputReader = reader;
     }
 
     private void Start()
@@ -88,10 +95,12 @@ public class UIHandler : MonoBehaviour
         {
             statUI.BuyButton.SetActive(false);
             statUI.TextField.text = "MAX";
+            statUI.LevelField.text = "lvl MAX";
             return;
         }
 
         statUI.TextField.text = $"{Mathf.RoundToInt(stat.CurrentValue * 100)}% + {Mathf.RoundToInt(upgrade * 100)}%";
+        statUI.LevelField.text = $"lvl {stat.Level}";
 
         if (type == StatType.BaseHealth)
         {
@@ -102,21 +111,26 @@ public class UIHandler : MonoBehaviour
     private void ShowFinishWaveView(int wave)
     {
         _waveText.text = $"Wave {wave}";
-
+        _powerUpsView.gameObject.SetActive(false);
+        SetUICover(true);
         _waveWinScreen.gameObject.SetActive(true);
         _waveReward.text = $"+{_waveSpawner.CurrentReward}";
         _money.AddMoney(_waveSpawner.CurrentReward);
         _audioPlayer.PlaySound(_winSound, _winSoundVolume);
         _chestProgress++;
+
         if (_chestProgress == _goldenChestProgress.maxValue)
         {
             _claimChestButton.image.color = Color.white;
             _claimChestButton.interactable = true;
             _chestProgress = 0;
         }
+
         SaveAndLoad.SaveChestInfo(_chestProgress);
+
         _goldenChestProgress.value = _chestProgress;
         CheckItemsUnlock(wave);
+
         SaveAndLoad.Save();
     }
 
@@ -134,8 +148,15 @@ public class UIHandler : MonoBehaviour
 
     private void ShowWaveLoseScreen()
     {
+        _powerUpsView.gameObject.SetActive(false);
+        SetUICover(true);
         _waveLoseScreen.gameObject.SetActive(true);
         SaveAndLoad.Save();
+    }
+
+    public void SetUICover(bool value)
+    {
+        _inputReader.IsUICover = value;
     }
 
     private void UpdateWaveProgress(int progress)
@@ -159,6 +180,20 @@ public class UIHandler : MonoBehaviour
     public void OnCreateBoxButtonClick() 
     {
         _purchaseHandler.TryBuyBox();
+    }
+
+    public void OnClickMuteButton()
+    {
+        _audioPlayer.Mute();
+        if (_audioPlayer.IsMuted)
+        {
+            _muteImage.sprite = _mutedSprite;
+            _muteImage.color = Color.red;
+            return;
+        }
+
+        _muteImage.sprite = _unmutedSprite;
+        _muteImage.color = Color.white;
     }
 
     public void OnClaimGoldenBoxButtonClick()
@@ -210,12 +245,14 @@ public class UIHandler : MonoBehaviour
 
     public void OnWaveRestart()
     {
+        SetUICover(false);
         _playerBase.Restart();
         _waveSpawner.RestartCurrentWave();
     }
 
     public void OnNextWaveStart()
     {
+        SetUICover(false);
         _waveSpawner.SpawnWave();
     }
 
@@ -235,6 +272,7 @@ public class UIHandler : MonoBehaviour
     {
         [field: SerializeField] public StatType Type { get; private set; }
         [field: SerializeField] public TextMeshProUGUI TextField { get; private set; }
+        [field: SerializeField] public TextMeshProUGUI LevelField { get; private set; }
         [field: SerializeField] public GameObject BuyButton { get; private set; } 
         [field: SerializeField] public GameObject Cover { get; private set; } 
         [field: SerializeField] public int WaveToOpen { get; private set; }

@@ -12,7 +12,7 @@ public class InputReader : MonoBehaviour
     private PlayerInput _playerInput;
     private InputAction _onSelectAction;
     private InputAction _onClickAction;
-    //public event Action Click;
+    public bool IsUICover { get; set; }
 
     public Vector2 MousePosition => _mainCam.ScreenToWorldPoint(_onSelectAction.ReadValue<Vector2>());
 
@@ -28,6 +28,11 @@ public class InputReader : MonoBehaviour
 
     private void OnClickPerformed(InputAction.CallbackContext context)
     {
+        if (IsUICover)
+        {
+            return;
+        }
+
         var raycastHit = Physics2D.Raycast(MousePosition, Vector2.zero, Mathf.Infinity);
         if (raycastHit.collider != null && raycastHit.collider.TryGetComponent(out IClickable clickable))
         {
@@ -37,11 +42,15 @@ public class InputReader : MonoBehaviour
         {
             dragable.OnDragStart();
         }
-        //Click?.Invoke();
     }
 
     private void OnClickCanceled(InputAction.CallbackContext context) 
     {
+        if (IsUICover)
+        {
+            return;
+        }
+
         var raycastHit = Physics2D.Raycast(MousePosition, Vector2.zero, Mathf.Infinity);
         if (raycastHit.collider != null && raycastHit.collider.TryGetComponent(out IDragable dragable))
         {

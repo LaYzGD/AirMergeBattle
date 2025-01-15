@@ -14,6 +14,7 @@ public class GlobalStats : MonoBehaviour
             if (currentStat != null)
             {
                 stat.Set(currentStat.CurrentValue);
+                stat.SetLevel(currentStat.Level);
                 continue;
             }
         
@@ -33,6 +34,7 @@ public class GlobalStats : MonoBehaviour
         }
 
         float newValue = stat.CurrentValue + value;
+        int newLevel = stat.Level + 1;
 
         if (stat.MaxValue != -1f)
         {
@@ -40,6 +42,8 @@ public class GlobalStats : MonoBehaviour
         }
 
         stat.Set(newValue);
+        stat.SetLevel(newLevel);
+
         SaveAndLoad.SaveStat(stat);
     }
 
@@ -68,9 +72,15 @@ public class Stat
     [field: SerializeField] public float BaseValue { get; private set; }
     [field: SerializeField] public StatType Type { get; private set; }
     public float CurrentValue { get; private set; }
+    public int Level { get; private set; } = 0;
 
     public void Set(float value) 
     {
         CurrentValue = value;
+    }
+
+    public void SetLevel(int level)
+    {
+        Level = level;
     }
 }

@@ -60,21 +60,28 @@ public class CellItem : MonoBehaviour, IDragable
         {
             OnDrag();
 
+            if (_inputReader.IsUICover)
+            {
+                _currentCell.PlaceItem(this);
+                _isDragging = false;
+                return;
+            }
+
 #if UNITY_EDITOR
             if (!Mouse.current.leftButton.isPressed)
             {
                 OnDragEnd();
             }
 #else
-        if (Touchscreen.current != null)
-        {
-            var touchPhase = Touchscreen.current.primaryTouch.phase.ReadValue();
-            if (touchPhase == UnityEngine.InputSystem.TouchPhase.Ended || 
-                touchPhase == UnityEngine.InputSystem.TouchPhase.Canceled)
+            if (Touchscreen.current != null)
             {
-                OnDragEnd();
+                var touchPhase = Touchscreen.current.primaryTouch.phase.ReadValue();
+                if (touchPhase == UnityEngine.InputSystem.TouchPhase.Ended || 
+                    touchPhase == UnityEngine.InputSystem.TouchPhase.Canceled)
+                {
+                    OnDragEnd();
+                }
             }
-        }
 #endif
         }
     }

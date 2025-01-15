@@ -26,6 +26,10 @@ public class WaveSpawner : MonoBehaviour
     private bool _waveIsConfigured;
     private List<Enemy> _activeEnemies;
 
+    private bool _waveIsFinished;
+
+    private Base _base;
+
     public int CurrentReward { get; private set; }
     public int CurrentWaveNumber => _currentWaveNumber;
 
@@ -35,6 +39,11 @@ public class WaveSpawner : MonoBehaviour
     public event Action<int> OnWaveProgressUpdate;
     public event Action<int> OnWaveConfigured;
 
+    [Inject]
+    public void Construct(Base playerBase)
+    {
+        _base = playerBase;
+    }
 
     private void Awake()
     {
@@ -45,6 +54,7 @@ public class WaveSpawner : MonoBehaviour
 
     private void Start()
     {
+        _base.OnBaseDestroyed += SetIsFinished;
         SpawnWave();
     }
 
@@ -62,6 +72,7 @@ public class WaveSpawner : MonoBehaviour
     private void ConfigureWave()
     {
         SaveAndLoad.Load();
+        _waveIsFinished = false;
         _currentWave = _waves[_currentWaveIndex];
         _currentWaveEnemies = new Dictionary<EnemyData, int>();
         _activeEnemies = new List<Enemy>();
@@ -130,8 +141,19 @@ public class WaveSpawner : MonoBehaviour
         OnWaveFinished?.Invoke();
     }
 
+    private void SetIsFinished()
+    {
+        _waveIsFinished = true;
+    }
+
     public void FinishWave()
     {
+        if (_waveIsFinished)
+        {
+            return;
+        }
+
+        _waveIsFinished = true;
         _currentWaveIndex++;
         if (_currentWaveIndex >= _waves.Length)
         {
@@ -201,5 +223,10 @@ public class WaveSpawner : MonoBehaviour
     private void OnEnemyDestroy(Enemy enemy)
     {
         Destroy(enemy.gameObject);
+    }
+
+    private void OnDisable()
+    {
+        _base.OnBaseDestroyed -= SetIsFinished;
     }
 }

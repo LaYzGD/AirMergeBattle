@@ -15,6 +15,7 @@ public class AudioPlayer : MonoBehaviour
     private ObjectPool<AudioObject> _audioPool;
 
     private bool _isMuted = false;
+    public bool IsMuted => _isMuted;
 
 
     private void Awake()

@@ -26,6 +26,8 @@ public class ItemShoot : MonoBehaviour
     private WaveSpawner _spawner;
     private TurretType _turretType;
 
+    private bool _isPaused;
+
     [Inject]
     public void Construct(ProjectilePool pool, GlobalStats stats, AudioPlayer audioPlayer, WaveSpawner spawner)
     {
@@ -49,6 +51,11 @@ public class ItemShoot : MonoBehaviour
 
     public void StartShooting()
     {
+        if (_isPaused)
+        {
+            return;
+        }
+
         _projectilePositions = CalculateProjectilePositions(_projectileAmount);
         _coroutine = StartCoroutine(Shoot());
     }
@@ -60,6 +67,7 @@ public class ItemShoot : MonoBehaviour
             return;
         }
 
+        _isPaused = false;
         StartShooting();
     }
 
@@ -70,6 +78,7 @@ public class ItemShoot : MonoBehaviour
             return;
         }
 
+        _isPaused = true;
         StopCoroutine(_coroutine);
     }
 
