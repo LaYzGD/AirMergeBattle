@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 using Zenject;
@@ -11,11 +12,14 @@ public class ItemBoxPool : MonoBehaviour
     private MergeGrid _grid;
     private GlobalStats _globalStats;
 
+    private ItemBoxType[] _boxes;
+
     [Inject]
     public void Construct(MergeGrid grid, GlobalStats stats) 
     {
         _grid = grid;
         _globalStats = stats;
+        _boxes = new ItemBoxType[] { _wooden, _silver, _gold };
     }
 
     private void Awake()
@@ -45,7 +49,15 @@ public class ItemBoxPool : MonoBehaviour
         }
         box.Initialize((Cell)validator.cell, currentBox, KillAction);
         validator.cell.SetItemFlag(true);
+        SaveAndLoad.SaveCell(typeof(Cell), new CellInfo(validator.cell.HasItem, validator.cell.Index, -1, currentBox.Index));
         return true;
+    }
+
+    public void CreateBox(Cell cell, int index)
+    {
+        var box = _boxPool.Get();
+        box.transform.position = cell.transform.position;
+        box.Initialize(cell, _boxes.FirstOrDefault(b => b.Index == index), KillAction);
     }
     
     private void KillAction(ItemBox box)

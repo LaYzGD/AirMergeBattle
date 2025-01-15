@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Data/ItemBox", fileName = "New ItemBox")]
 public class ItemBoxType : ScriptableObject
 {
+    [field: SerializeField] public int Index { get; private set; }
     [field: SerializeField] public Sprite Sprite { get; private set; }
     [field: SerializeField] public DropInfo[] Drops { get; private set; }
 }

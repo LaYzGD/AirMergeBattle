@@ -11,11 +11,13 @@ public class MergeGrid : MonoBehaviour
 
     private GridSystem<Cell> _grid;
     private AllTurretUpgrades _allTurretUpgrades;
+    private ItemBoxPool _itemBoxPool;
 
     [Inject]
-    public void Construct(AllTurretUpgrades upgrades)
+    public void Construct(AllTurretUpgrades upgrades, ItemBoxPool pool)
     {
         _allTurretUpgrades = upgrades;
+        _itemBoxPool = pool;
     }
 
     private void Start()
@@ -35,7 +37,14 @@ public class MergeGrid : MonoBehaviour
         var cellInfo = SaveAndLoad.LoadCell(index, typeof(Cell));
         if (cellInfo != null && cellInfo.HasItem)
         {
-            cell.CreateItem(_allTurretUpgrades.GetTurretByIndex(cellInfo.TurretIndex));
+            if (cellInfo.TurretIndex != -1)
+            {
+                cell.CreateItem(_allTurretUpgrades.GetTurretByIndex(cellInfo.TurretIndex));
+            }
+            else if(cellInfo.BoxIndex != -1)
+            {
+                _itemBoxPool.CreateBox(cell, cellInfo.BoxIndex);
+            }
         }
         _grid.SetValue(pos, cell);
     }

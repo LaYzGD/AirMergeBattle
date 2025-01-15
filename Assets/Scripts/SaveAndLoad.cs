@@ -9,7 +9,6 @@ public static class SaveAndLoad
     private const string _money = "Money";
     private const string _stat = "Stat_";
     private const string _goldenChest = "GoldenChest";
-    private const string _box = "Box";
 
     private static readonly EasyFileSave _file = new EasyFileSave();
 
@@ -112,11 +111,13 @@ public class CellInfo
     public bool HasItem { get; private set; }
     public int CellIndex { get; private set; }
     public int TurretIndex { get; private set; }
+    public int BoxIndex { get; private set; }
 
-    public CellInfo(bool hasItem, int cellIndex, int turretIndex = -1)
+    public CellInfo(bool hasItem, int cellIndex, int turretIndex = -1, int boxIndex = -1)
     {
         HasItem = hasItem;
         CellIndex = cellIndex;
         TurretIndex = turretIndex;
+        BoxIndex = boxIndex;
     }
 }

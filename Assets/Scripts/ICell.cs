@@ -1,5 +1,6 @@
 public interface ICell
 {
+    public int Index { get; }
     public bool HasItem { get; }
     public virtual void PlaceItem(CellItem item) { }
     public virtual bool CanPlaceItem(CellItem item) { return false; }
