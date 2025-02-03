@@ -43,7 +43,7 @@ public class Enemy : MonoBehaviour, IDamageable
     public void StartMovement()
     {
         _rigidbody2D.gravityScale = 0f;
-        _rigidbody2D.linearVelocityX = _enemyData.MovementSpeed;
+        _rigidbody2D.velocity = Vector2.right * _enemyData.MovementSpeed;
     }
 
     public void TakeDamage(float damage) 

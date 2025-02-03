@@ -72,7 +72,7 @@ public class Projectile : MonoBehaviour
             FindTarget(true);
         }
 
-        _rigidBody2D.linearVelocityY = _movementSpeed;
+        _rigidBody2D.velocity = Vector2.up * _movementSpeed;
     }
 
     private void FindTarget(bool simpleKill)
@@ -91,7 +91,7 @@ public class Projectile : MonoBehaviour
         }
 
         _rigidBody2D.angularVelocity = 0f;
-        _rigidBody2D.linearVelocity = transform.up * _movementSpeed;
+        _rigidBody2D.velocity = transform.up * _movementSpeed;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -129,7 +129,7 @@ public class Projectile : MonoBehaviour
             float rotationAmount = Vector3.Cross(direction, transform.up).z;
 
             _rigidBody2D.angularVelocity = -rotationAmount * _rotationSpeed;
-            _rigidBody2D.linearVelocity = transform.up * _movementSpeed;
+            _rigidBody2D.velocity = transform.up * _movementSpeed;
             yield return null;
         }
 
